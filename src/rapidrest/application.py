@@ -105,8 +105,12 @@ def start(*_):
     app.logger.name = app_name
 
     # Load the API before we load secrets, so we know what the API needs
-    api_root = os.environ.get("RAPIDREST_API_ROOT", "rapidrest_dummyapi")
-    routebuilder.load_api(app, api_root)
+    api_root = os.environ.get("RAPIDREST_API_ROOT", "rapidrest_dummyapi.v1")
+    try:
+        routebuilder.load_api(app, api_root)
+    except routebuilder.RouteBuilderError as e:
+        app.logger.error("Failed to load API: %s", e)
+        exit(2)
 
     require_vault = bool(os.environ.get("RAPIDREST_REQUIRE_VAULT", False))
     if require_vault and not enable_vault(app, require_vault):

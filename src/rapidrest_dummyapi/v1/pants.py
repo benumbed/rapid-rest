@@ -1,9 +1,9 @@
 from flask import jsonify, make_response
 from flask.views import MethodView
 
-class V1(MethodView):
-    endpoint_name = "v1"
-    _description = "Root endpoint"
+class Pants(MethodView):
+    endpoint_name = "pants"
+    _description = "Pants endpoint"
     _parameter_definitions = {
         "name": {
             "description": "The 'nice' name of the job",
@@ -19,7 +19,7 @@ class V1(MethodView):
         return self._parameter_definitions
 
     
-    def get(self):
+    def get(self, id=None):
         """
         @brief      Example of a GET
         
