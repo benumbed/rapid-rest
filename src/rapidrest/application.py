@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 """
 Application layer for the Rapid-REST server.
+
 """
 import flask
 import importlib
 import os
 from logging.config import dictConfig
 
-from rapidrest import utils, routebuilder
+from rapidrest import utils, routebuilder, errorhandlers
 
 # TODO: This needs to be configurable
 def _init_logging():
@@ -31,14 +32,13 @@ def _init_logging():
     })
 
 
-def enable_vault(app, vault_required=False):
+def enable_vault(app):
     """
     @brief      Enables access to Hashicorp's Vault.  Vault support currently only works with approle, and the secret-id
                 must be wrapped.  The only supported secrets engine is currently KV v2 (since the VaultClient library
                 currently only supports KV v2).
     
-    @param      app             The Flask application
-    @param      vault_required  Indicates whether Vault is required or not, so we can adjust logging accordingly
+    @param      app       The Flask application
     
     @return     bool - True on success, False otherwise
     """
@@ -56,7 +56,7 @@ def enable_vault(app, vault_required=False):
     missing_vault_vars = utils.check_required_args(vault_keys, os.environ)
 
     # Login to Vault
-    if (not missing_vault_vars):
+    if not missing_vault_vars:
         app.config["vault"] = vaultclient.VaultClient(
             os.environ["VAULT_URL"], 
             os.environ["VAULT_ROLE_ID"], 
@@ -73,8 +73,7 @@ def enable_vault(app, vault_required=False):
         )
 
     else:
-        if vault_required:
-            log.info("Vault integration disabled, missing environment variables: %s", missing_vault_vars)
+        log.error(f"Vault connection failed, missing environment variables: {missing_vault_vars}")
         return False
 
     vault = app.config["vault"]
@@ -103,6 +102,7 @@ def start(*_):
     app_name = os.environ.get("RAPIDREST_APP_NAME", "rapidrest.application")
     app = flask.Flask(app_name)
     app.logger.name = app_name
+    errorhandlers.register_handlers(app)
 
     # Load the API before we load secrets, so we know what the API needs
     api_root = os.environ.get("RAPIDREST_API_ROOT", "rapidrest_dummyapi.v1")
@@ -113,9 +113,10 @@ def start(*_):
         exit(2)
 
     require_vault = bool(os.environ.get("RAPIDREST_REQUIRE_VAULT", False))
-    if require_vault and not enable_vault(app, require_vault):
+    if require_vault and not enable_vault(app):
         app.logger.error("Vault support was required, but enabling Vault failed, exiting")
         exit(1)
+
 
     return app
     

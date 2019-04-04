@@ -40,7 +40,7 @@ def _add_url_rule(app, url, view, log, id_rule=False):
     @param      log             The log
     @param      id_rule         Indicates this is a request for a rule with /<id> on the end of it
     
-    @return     { description_of_the_return_value }
+    @return     The view method or None
     """
     app.add_url_rule(
         url,
@@ -50,13 +50,14 @@ def _add_url_rule(app, url, view, log, id_rule=False):
     log.debug("Added endpoint '%s'", url)
 
     if id_rule:
+        rule = f"{url}/<obj_id>"
         app.add_url_rule(
-            f"{url}/<id>",
+            rule,
             # The lambda obfuscates the view func, so Flask won't complain about the same method being used for the 
             # id call
             view_func=lambda *args, **kwargs: view(*args, **kwargs),
         )
-        log.debug("Added 'id' endpoint '%s/<id>'", url)
+        log.debug(f"Added 'id' endpoint '{rule}'")
 
     return view if not id_rule else None
 
@@ -98,15 +99,15 @@ def _resource_initializer(app, root, module, log):
         meth_sig = signature(getattr(view.view_class, method.lower()))
 
         # We have to check for both required ID methods and methods which can optionally have one
-        if method in reqired_id_methods and "id" not in meth_sig.parameters:
-            raise RouteBuilderError("Method '%s' in %s is required to have an 'id' parameter", method.lower(), module_py_path)
-        elif method in optional_id_methods and "id" not in meth_sig.parameters:
+        if method in reqired_id_methods and "obj_id" not in meth_sig.parameters:
+            raise RouteBuilderError(f"Method '{method}' in {module_py_path} is required to have an 'obj_id' parameter")
+        elif method in optional_id_methods and "obj_id" not in meth_sig.parameters:
             continue
 
         needs_id_rule = True
         break
 
-    _add_url_rule(app, url, resource_class, log, id_rule=needs_id_rule)
+    _add_url_rule(app, url, view, log, id_rule=needs_id_rule)
 
 
 

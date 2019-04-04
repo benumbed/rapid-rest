@@ -1,5 +1,6 @@
-from flask import jsonify, make_response
 from flask.views import MethodView
+
+class BananaBlenderError(Exception): pass
 
 class V1(MethodView):
     endpoint_name = "v1"
@@ -27,5 +28,5 @@ class V1(MethodView):
         
         @return     { description_of_the_return_value }
         """
-        make_response((jsonify({"example": True}), 200, {"Content-Type": "application/json"}))
+        raise BananaBlenderError("whoopsie")
         

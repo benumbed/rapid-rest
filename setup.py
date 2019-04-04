@@ -10,17 +10,18 @@ def import_requires():
 
 setup(
     name="rapid-rest",
-    version="0.0.0",
+    version="0.1.0",
     url='https://gitlab.bunker/global/rapid-rest',
     description="Rapid development REST API server built on Flask and friends",
     license='MIT',
     author='Benumbed',
     author_email='benumbed@projectneutron.com',
     package_dir={'': 'src'},
-    packages=["rapidrest", "rapidrest_dummyapi"],
+    packages=["rapidrest", "rapidrest_dummyapi", "rapidrest_tests"],
     install_requires = import_requires(),
     extras_require = {
-        "Vault": ["hvac>=0.7.2"]
+        "Vault": ["hvac>=0.7.2"],
+        "tests": ["nose2", "WebTest"]
     },
     classifiers=[
         'Topic :: Internet :: WWW/HTTP :: WSGI :: Application',

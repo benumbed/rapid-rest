@@ -19,7 +19,7 @@ class Pants(MethodView):
         return self._parameter_definitions
 
     
-    def get(self, id=None):
+    def get(self, obj_id=None):
         """
         @brief      Example of a GET
         
@@ -27,5 +27,15 @@ class Pants(MethodView):
         
         @return     { description_of_the_return_value }
         """
-        make_response((jsonify({"example": True}), 200, {"Content-Type": "application/json"}))
+        if obj_id is not None:
+            resp = make_response(
+                (
+                    jsonify({"example": True, "id": obj_id}), 
+                    200, 
+                    {"Content-Type": "application/json"}
+                )
+            )
+        else:
+            resp = make_response((jsonify({"example": True}), 200, {"Content-Type": "application/json"}))
+        return resp
         
