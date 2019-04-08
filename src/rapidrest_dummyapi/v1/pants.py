@@ -1,25 +1,12 @@
 from flask import jsonify, make_response
-from flask.views import MethodView
 
-class Pants(MethodView):
+from rapidrest.apiresource import ApiResource
+
+class Pants(ApiResource):
     endpoint_name = "pants"
-    _description = "Pants endpoint"
-    _parameter_definitions = {
-        "name": {
-            "description": "The 'nice' name of the job",
-            "arg_type": "str",
-            "required": True,
-            "default": None,
-        },
-    }
+    description = "Pants endpoint"
 
-    
-    @property
-    def parameters(self):
-        return self._parameter_definitions
-
-    
-    def get(self, obj_id=None):
+    def get(self, obj_id=""):
         """
         @brief      Example of a GET
         
@@ -28,14 +15,18 @@ class Pants(MethodView):
         @return     { description_of_the_return_value }
         """
         if obj_id is not None:
-            resp = make_response(
-                (
-                    jsonify({"example": True, "id": obj_id}), 
-                    200, 
-                    {"Content-Type": "application/json"}
-                )
-            )
+            resp = make_response((jsonify({"pants_get": True, "id": obj_id}), 200))
         else:
-            resp = make_response((jsonify({"example": True}), 200, {"Content-Type": "application/json"}))
+            resp = make_response((jsonify({"pants_get": True}), 200))
         return resp
-        
+    
+
+    def post(self):
+        """
+        @brief      { function_description }
+
+        @param      self  The object
+
+        @return     { description_of_the_return_value }
+        """
+        return make_response(jsonify({"pants_post": True}), 200)

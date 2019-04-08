@@ -9,6 +9,7 @@ import os
 from logging.config import dictConfig
 
 from rapidrest import utils, routebuilder, errorhandlers
+from rapidrest.exceptions import *
 
 # TODO: This needs to be configurable
 def _init_logging():
@@ -57,11 +58,16 @@ def enable_vault(app):
 
     # Login to Vault
     if not missing_vault_vars:
-        app.config["vault"] = vaultclient.VaultClient(
-            os.environ["VAULT_URL"], 
-            os.environ["VAULT_ROLE_ID"], 
-            os.environ["VAULT_WRAPPED_SECRET"]
-        )
+        try:
+            app.config["vault"] = vaultclient.VaultClient(
+                os.environ["VAULT_URL"],
+                os.environ["VAULT_ROLE_ID"],
+                os.environ["VAULT_WRAPPED_SECRET"]
+            )
+        except Exception as e:
+            log.error(f"Failed to initialize Vault connection: {e}")
+            return False
+
         if not app.config["vault"].login():
             log.error("Vault login failed")
             return False
@@ -79,9 +85,11 @@ def enable_vault(app):
     vault = app.config["vault"]
     # If Vault is enabled, we will fetch the application's keys from Vault storage
     try:
-        app.config["secrets"] = vault.get_secrets(os.environ["VAULT_SECRETS_PATH"], os.environ["VAULT_SECRETS_MOUNT"])
+        app.config["api_config"].update(vault.get_secrets(
+            os.environ["VAULT_SECRETS_PATH"], os.environ["VAULT_SECRETS_MOUNT"]))
     except vaultclient.VaultClientError as e:
         log.error("Could not load secrets from Vault: %s", e)
+        del app.config["vault"]
         return False
 
     log.info("Loaded secrets from Vault")
@@ -104,6 +112,24 @@ def start(*_):
     app.logger.name = app_name
     errorhandlers.register_handlers(app)
 
+    app.config["api_config"] = {
+        "service": "fake.rapidrest.dev",
+        "security": {
+            "whitelist": True,  # By default no API resources are available unless explicitly set in the config
+            "endpoint_control": {
+                # Has to match the URL rule created for a resource/endpoint
+                "/health": {
+                    "GET": {
+                        "authentication": {
+                            "required": False,
+                        },
+                        # authn not being required technically means authz isn't required either, thus it's not here
+                    }
+                }
+            }
+        }
+    }
+
     # Load the API before we load secrets, so we know what the API needs
     api_root = os.environ.get("RAPIDREST_API_ROOT", "rapidrest_dummyapi.v1")
     try:
@@ -112,11 +138,12 @@ def start(*_):
         app.logger.error("Failed to load API: %s", e)
         exit(2)
 
-    require_vault = bool(os.environ.get("RAPIDREST_REQUIRE_VAULT", False))
+    require_vault = bool(os.environ.get("REQUIRE_VAULT", False))
     if require_vault and not enable_vault(app):
         app.logger.error("Vault support was required, but enabling Vault failed, exiting")
         exit(1)
 
+    if "logging" in app.config["api_config"]:
+        dictConfig(app.config["api_config"]["logging"])
 
     return app
-    

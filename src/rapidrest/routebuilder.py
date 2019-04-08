@@ -14,8 +14,7 @@ class IntegrationBootError(RouteBuilderError): pass
 def _load_integrations(app, module, api_path, module_py_path, log):
     """
     @brief      Loads integrations.
-    
-    @return     { description_of_the_return_value }
+
     """
     integration_boot = getattr(module, "initialize_ext_resources", None)
     if integration_boot is None:
@@ -26,8 +25,6 @@ def _load_integrations(app, module, api_path, module_py_path, log):
     log.debug("Running bootstrap for integrations in %s", api_path)
     if not integration_boot(app):
         raise IntegrationBootError("Failed to run integration bootstrap for %s", module_py_path)
-
-    return True
 
 
 def _add_url_rule(app, url, view, log, id_rule=False):
@@ -62,16 +59,22 @@ def _add_url_rule(app, url, view, log, id_rule=False):
     return view if not id_rule else None
 
 
+def _gather_restrictions(app, ep_class, log):
+    """
+    @brief      Gathers an endpoint's restrictions
+    
+    @return     { description_of_the_return_value }
+    """
+    pass
+
 def _resource_initializer(app, root, module, log):
     """
-    @brief      { function_description }
+    @brief      This loads a resource class that was discovered by `load_api`
     
     @param      app     The application
     @param      root    The api path
     @param      module  The module
     @param      log     The log
-    
-    @return     { description_of_the_return_value }
     """
     reqired_id_methods = {"PUT", "DELETE", "PATCH"}
     optional_id_methods = {"GET"}
@@ -105,7 +108,6 @@ def _resource_initializer(app, root, module, log):
             continue
 
         needs_id_rule = True
-        break
 
     _add_url_rule(app, url, view, log, id_rule=needs_id_rule)
 
@@ -119,8 +121,6 @@ def load_api(app, api_path, _root=""):
     @param      app       The application
     @param      api_path  The Python path to the API package
     @param      _root     Used for recursion, do not set this
-    
-    @return     { description_of_the_return_value }
     """
     log = app.logger
 
@@ -147,7 +147,7 @@ def load_api(app, api_path, _root=""):
         try:
             module = importlib.import_module(module_py_path)
         except ImportError as e:
-            raise RouteBuilderError("Failed to import API resource %s: %s", module_py_path, e)
+            raise RouteBuilderError(f"Failed to import API resource {module_py_path}: {e}")
 
         # Load integrations for this resource, if needed
         if module_info.name == "rr_integrations":
@@ -155,5 +155,3 @@ def load_api(app, api_path, _root=""):
             continue
 
         _resource_initializer(app, sub_resource_root, module, log)
-
-    return True

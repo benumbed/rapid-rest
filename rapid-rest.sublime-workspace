@@ -4,6 +4,158 @@
 		"selected_items":
 		[
 			[
+				"dict",
+				"dictConfig\tfunction"
+			],
+			[
+				"dis",
+				"dispatch_request"
+			],
+			[
+				"bef",
+				"before_request\tfunction"
+			],
+			[
+				"Vaul",
+				"VaultClient\tclass"
+			],
+			[
+				"typ",
+				"typemap\tstatement"
+			],
+			[
+				"js",
+				"json_body\tstatement"
+			],
+			[
+				"_hanl",
+				"_handle_unclassified"
+			],
+			[
+				"re",
+				"register_handlers\tfunction"
+			],
+			[
+				"j",
+				"json_body\tstatement"
+			],
+			[
+				"Rapi",
+				"RapidRestVaultError\tclass"
+			],
+			[
+				"reou",
+				"resource_class\tstatement"
+			],
+			[
+				"id",
+				"id_rule\tparam"
+			],
+			[
+				"endp",
+				"endpoint_name\tstatement"
+			],
+			[
+				"retur",
+				"return_view\tparam"
+			],
+			[
+				"view",
+				"view_class"
+			],
+			[
+				"exi",
+				"exiting_optional_id_meth\tstatement"
+			],
+			[
+				"resour",
+				"resource_name\tstatement"
+			],
+			[
+				"ap",
+				"api_resource\tstatement"
+			],
+			[
+				"_",
+				"__name__"
+			],
+			[
+				"module_",
+				"module_name\tstatement"
+			],
+			[
+				"module",
+				"module_py_path\tstatement"
+			],
+			[
+				"mod",
+				"module_py_path\tstatement"
+			],
+			[
+				"resource",
+				"resource_class\tstatement"
+			],
+			[
+				"api_",
+				"api_path\tparam"
+			],
+			[
+				"resou",
+				"resource_class"
+			],
+			[
+				"integra",
+				"integration_boot\tstatement"
+			],
+			[
+				"impo",
+				"import_module\tfunction"
+			],
+			[
+				"import",
+				"importlib\tmodule"
+			],
+			[
+				"api",
+				"api_root_path\tparam"
+			],
+			[
+				"api_root",
+				"api_root_path"
+			],
+			[
+				"api_ro",
+				"api_root_path\tparam"
+			],
+			[
+				"load",
+				"load_api\tfunction"
+			],
+			[
+				"requ",
+				"require_vault\tstatement"
+			],
+			[
+				"enabl",
+				"enable_vault\tfunction"
+			],
+			[
+				"env",
+				"environ\tstatement"
+			],
+			[
+				"i",
+				"invalidate_caches\tfunction"
+			],
+			[
+				"VaultCli",
+				"VaultClientError"
+			],
+			[
+				"missing",
+				"missing_vault_vars\tstatement"
+			],
+			[
 				"VA",
 				"VAULT_SECRETS_PATH"
 			],
@@ -96,10 +248,6 @@
 				"assertEquals\tstatement"
 			],
 			[
-				"js",
-				"json\tfunction"
-			],
-			[
 				"docker",
 				"docker_args\tstatement"
 			],
@@ -136,10 +284,6 @@
 				"exec_meth\tstatement"
 			],
 			[
-				"requ",
-				"required_container_keys\tstatement"
-			],
-			[
 				"loca",
 				"_locate_config\tfunction"
 			],
@@ -150,10 +294,6 @@
 			[
 				"uniq",
 				"unique_name\tparam"
-			],
-			[
-				"env",
-				"environment"
 			],
 			[
 				"DockerFac",
@@ -252,16 +392,8 @@
 				"login_error\tstatement"
 			],
 			[
-				"VaultCli",
-				"VaultClientError\tclass"
-			],
-			[
 				"err",
 				"err_msg\tstatement"
-			],
-			[
-				"Vaul",
-				"VaultClientError\tclass"
 			],
 			[
 				"wrapp",
@@ -298,10 +430,6 @@
 			[
 				"miss",
 				"missing_args\tstatement"
-			],
-			[
-				"missing",
-				"missing_args_msg\tstatement"
 			],
 			[
 				"DockerEx",
@@ -342,10 +470,6 @@
 			[
 				"sc",
 				"schedulers"
-			],
-			[
-				"ap",
-				"apscheduler\tmodule"
 			],
 			[
 				"job",
@@ -390,135 +514,136 @@
 			[
 				"API",
 				"API_ROOT_CLASS_NAME\tstatement"
-			],
-			[
-				"mob",
-				"mbox_controller_api\tmodule"
-			],
-			[
-				"root",
-				"root_module\tstatement"
-			],
-			[
-				"if",
-				"ifmain\tif __name__ == '__main__'"
-			],
-			[
-				"control",
-				"controller-api"
-			],
-			[
-				"excep",
-				"exceptions"
-			],
-			[
-				"storage",
-				"storage_module"
-			],
-			[
-				"defau",
-				"default_exists"
-			],
-			[
-				"configmg",
-				"configmgr"
-			],
-			[
-				"write",
-				"write_to_disk"
-			],
-			[
-				"Conf",
-				"ConfigDoesNotExist\tclass"
-			],
-			[
-				"default",
-				"default_exists\tstatement"
-			],
-			[
-				"defaul",
-				"default_config_file\tparam"
-			],
-			[
-				"_load",
-				"_load_default_config"
-			],
-			[
-				"default_con",
-				"default_config_file"
-			],
-			[
-				"assin",
-				"assertIn\tfunction"
-			],
-			[
-				"mbox",
-				"mbox_lights\tstatement"
-			],
-			[
-				"_light",
-				"_light_cache\tstatement"
-			],
-			[
-				"_li",
-				"_light_cache\tstatement"
-			],
-			[
-				"_lig",
-				"_lights_by_name\tstatement"
-			],
-			[
-				"ava",
-				"available_lights\tfunction"
-			],
-			[
-				"assertDi",
-				"assertDictContainsSubset\tfunction"
-			],
-			[
-				"Ase",
-				"assertEquals\tstatement"
-			],
-			[
-				"ass",
-				"assertIn\tfunction"
-			],
-			[
-				"Phill",
-				"PhillipsHue"
-			],
-			[
-				"Ph",
-				"PhilipsHue\tclass"
-			],
-			[
-				"auth",
-				"auth_token\tparam"
-			],
-			[
-				"rest",
-				"restart_policy"
-			],
-			[
-				"c",
-				"cfgmgr\tparam"
-			],
-			[
-				"Z",
-				"Zone\tclass"
-			],
-			[
-				"Zone",
-				"ZoneError\tclass"
-			],
-			[
-				"loa",
-				"loaded\tstatement"
 			]
 		]
 	},
 	"buffers":
 	[
+		{
+			"file": "setup.py",
+			"settings":
+			{
+				"buffer_size": 1511,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "requirements.txt",
+			"settings":
+			{
+				"buffer_size": 137,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/rapidrest/application.py",
+			"settings":
+			{
+				"buffer_size": 4764,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/rapidrest/routebuilder.py",
+			"settings":
+			{
+				"buffer_size": 5459,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/rapidrest/authentication.py",
+			"settings":
+			{
+				"buffer_size": 637,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/rapidrest_tests/test_authentication.py",
+			"settings":
+			{
+				"buffer_size": 2442,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/rapidrest_tests/test_api.py",
+			"settings":
+			{
+				"buffer_size": 2384,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/rapidrest/errorhandlers.py",
+			"settings":
+			{
+				"buffer_size": 1292,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/rapidrest/exceptions.py",
+			"settings":
+			{
+				"buffer_size": 145,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/rapidrest/utils.py",
+			"settings":
+			{
+				"buffer_size": 1430,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/rapidrest_dummyapi/v1/pants.py",
+			"settings":
+			{
+				"buffer_size": 1006,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/rapidrest/apiresource.py",
+			"settings":
+			{
+				"buffer_size": 772,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/rapidrest_dummyapi/v1/__init__.py",
+			"settings":
+			{
+				"buffer_size": 409,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/rapidrest_dummyapi/v1/rr_integrations.py",
+			"settings":
+			{
+				"buffer_size": 477,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -576,10 +701,22 @@
 	},
 	"expanded_folders":
 	[
-		"/home/benumbed/Projects/rapid-rest"
+		"/home/benumbed/Projects/rapid-rest",
+		"/home/benumbed/Projects/rapid-rest/src",
+		"/home/benumbed/Projects/rapid-rest/src/rapidrest",
+		"/home/benumbed/Projects/rapid-rest/src/rapidrest_dummyapi",
+		"/home/benumbed/Projects/rapid-rest/src/rapidrest_dummyapi/v1",
+		"/home/benumbed/Projects/rapid-rest/src/rapidrest_tests"
 	],
 	"file_history":
 	[
+		"/home/benumbed/Projects/rapid-rest/LICENSE",
+		"/home/benumbed/Projects/rapid-rest/src/rapidrest_tests/__init__.py",
+		"/home/benumbed/Projects/rapid-rest/rapid-rest.sublime-project",
+		"/home/benumbed/Projects/rapid-rest/src/rapidrest/utils.py",
+		"/home/benumbed/Projects/rapid-rest/src/rapidrest_dummyapi/v1/pants.py",
+		"/home/benumbed/Projects/rapid-rest/src/rapidrest/application.py",
+		"/home/benumbed/Projects/rapid-rest/requirements.txt",
 		"/home/benumbed/Projects/bunsched/bunsched.sublime-project",
 		"/home/benumbed/Projects/bunsched/requirements.txt",
 		"/home/benumbed/Projects/bunsched/docker.env",
@@ -700,18 +837,11 @@
 		"/home/robo/Projects/nightingale-engine/src/core/os-framework/sdl2/framework.cpp",
 		"/home/robo/Projects/nightingale-engine/src/core/platform/windows/ng-entry.cpp",
 		"/home/robo/Projects/nightingale-engine/build/src/core/input/CMakeFiles/inputmanager.dir/link.txt",
-		"/home/robo/Projects/nightingale-engine/src/core/monocore/monomanager.cpp",
-		"/home/robo/Projects/nightingale-engine/src/core/monocore/CMakeLists.txt",
-		"/home/robo/Projects/nightingale-engine/src/script/CMakeLists.txt",
-		"/home/robo/Projects/nightingale-engine/src/script/NightingaleEngine/CMakeLists.txt",
-		"/home/robo/Projects/nightingale-engine/src/script/NightingaleEngine/NightingaleEngine.csproj",
-		"/home/robo/Projects/nightingale-engine/src/script/NightingaleEngine/NightingaleEngine.csproj.DotSettings",
-		"/home/robo/Projects/nightingale-engine/src/script/script.sln",
-		"/home/nickw/Projects/robo-ext-builds/config/build-config.cmake"
+		"/home/robo/Projects/nightingale-engine/src/core/monocore/monomanager.cpp"
 	],
 	"find":
 	{
-		"height": 32.0
+		"height": 42.0
 	},
 	"find_in_files":
 	{
@@ -725,6 +855,7 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"Python"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -742,28 +873,826 @@
 	"groups":
 	[
 		{
+			"selected": 0,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "setup.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1511,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1510,
+								1510
+							]
+						],
+						"settings":
+						{
+							"auto_complete_triggers":
+							[
+								{
+									"characters": ".>:",
+									"selector": "source.c++ - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>:",
+									"selector": "source.c - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>: ",
+									"selector": "source.objc++ - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>: ",
+									"selector": "source.objc - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>: ",
+									"selector": "source.cuda-c++ - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
+								}
+							],
+							"git_gutter_is_enabled": true,
+							"glsv_configured": true,
+							"glsv_enabled": 1,
+							"glsv_spec": 0,
+							"syntax": "Packages/Python/Python.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "requirements.txt",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 137,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								21,
+								21
+							]
+						],
+						"settings":
+						{
+							"git_gutter_is_enabled": true,
+							"glsv_configured": true,
+							"glsv_enabled": 1,
+							"glsv_spec": 0,
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 13,
+					"type": "text"
+				}
 			]
 		},
 		{
+			"selected": 0,
 			"sheets":
 			[
+				{
+					"buffer": 2,
+					"file": "src/rapidrest/application.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4764,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1979,
+								1979
+							]
+						],
+						"settings":
+						{
+							"auto_complete_triggers":
+							[
+								{
+									"characters": ".>:",
+									"selector": "source.c++ - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>:",
+									"selector": "source.c - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>: ",
+									"selector": "source.objc++ - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>: ",
+									"selector": "source.objc - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>: ",
+									"selector": "source.cuda-c++ - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
+								}
+							],
+							"git_gutter_is_enabled": true,
+							"glsv_configured": true,
+							"glsv_enabled": 1,
+							"glsv_spec": 0,
+							"syntax": "Packages/Python/Python.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 966.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "src/rapidrest/routebuilder.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5459,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5186,
+								5186
+							]
+						],
+						"settings":
+						{
+							"auto_complete_triggers":
+							[
+								{
+									"characters": ".>:",
+									"selector": "source.c++ - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>:",
+									"selector": "source.c - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>: ",
+									"selector": "source.objc++ - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>: ",
+									"selector": "source.objc - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>: ",
+									"selector": "source.cuda-c++ - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
+								}
+							],
+							"git_gutter_is_enabled": true,
+							"glsv_configured": true,
+							"glsv_enabled": 1,
+							"glsv_spec": 0,
+							"open_with_edit": true,
+							"syntax": "Packages/Python/Python.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 1449.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "src/rapidrest/authentication.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 637,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								637,
+								637
+							]
+						],
+						"settings":
+						{
+							"auto_complete_triggers":
+							[
+								{
+									"characters": ".>:",
+									"selector": "source.c++ - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>:",
+									"selector": "source.c - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>: ",
+									"selector": "source.objc++ - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>: ",
+									"selector": "source.objc - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>: ",
+									"selector": "source.cuda-c++ - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
+								}
+							],
+							"git_gutter_is_enabled": true,
+							"glsv_configured": true,
+							"glsv_enabled": 1,
+							"glsv_spec": 0,
+							"open_with_edit": true,
+							"syntax": "Packages/Python/Python.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "src/rapidrest_tests/test_authentication.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2442,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								455,
+								455
+							]
+						],
+						"settings":
+						{
+							"auto_complete_triggers":
+							[
+								{
+									"characters": ".>:",
+									"selector": "source.c++ - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>:",
+									"selector": "source.c - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>: ",
+									"selector": "source.objc++ - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>: ",
+									"selector": "source.objc - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>: ",
+									"selector": "source.cuda-c++ - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
+								}
+							],
+							"git_gutter_is_enabled": true,
+							"glsv_configured": true,
+							"glsv_enabled": 1,
+							"glsv_spec": 0,
+							"open_with_edit": true,
+							"syntax": "Packages/Python/Python.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "src/rapidrest_tests/test_api.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2384,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2384,
+								2384
+							]
+						],
+						"settings":
+						{
+							"auto_complete_triggers":
+							[
+								{
+									"characters": ".>:",
+									"selector": "source.c++ - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>:",
+									"selector": "source.c - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>: ",
+									"selector": "source.objc++ - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>: ",
+									"selector": "source.objc - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>: ",
+									"selector": "source.cuda-c++ - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
+								}
+							],
+							"git_gutter_is_enabled": true,
+							"glsv_configured": true,
+							"glsv_enabled": 1,
+							"glsv_spec": 0,
+							"syntax": "Packages/Python/Python.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "src/rapidrest/errorhandlers.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1292,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								496,
+								496
+							]
+						],
+						"settings":
+						{
+							"auto_complete_triggers":
+							[
+								{
+									"characters": ".>:",
+									"selector": "source.c++ - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>:",
+									"selector": "source.c - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>: ",
+									"selector": "source.objc++ - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>: ",
+									"selector": "source.objc - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>: ",
+									"selector": "source.cuda-c++ - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
+								}
+							],
+							"git_gutter_is_enabled": true,
+							"glsv_configured": true,
+							"glsv_enabled": 1,
+							"glsv_spec": 0,
+							"open_with_edit": true,
+							"syntax": "Packages/Python/Python.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 11,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "src/rapidrest/exceptions.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 145,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								145,
+								145
+							]
+						],
+						"settings":
+						{
+							"auto_complete_triggers":
+							[
+								{
+									"characters": ".>:",
+									"selector": "source.c++ - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>:",
+									"selector": "source.c - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>: ",
+									"selector": "source.objc++ - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>: ",
+									"selector": "source.objc - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>: ",
+									"selector": "source.cuda-c++ - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
+								}
+							],
+							"git_gutter_is_enabled": true,
+							"glsv_configured": true,
+							"glsv_enabled": 1,
+							"glsv_spec": 0,
+							"open_with_edit": true,
+							"syntax": "Packages/Python/Python.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 10,
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "src/rapidrest/utils.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1430,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1387,
+								1387
+							]
+						],
+						"settings":
+						{
+							"git_gutter_is_enabled": true,
+							"glsv_configured": true,
+							"glsv_enabled": 1,
+							"glsv_spec": 0,
+							"syntax": "Packages/Python/Python.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 9,
+					"type": "text"
+				}
 			]
 		},
 		{
+			"selected": 0,
 			"sheets":
 			[
+				{
+					"buffer": 10,
+					"file": "src/rapidrest_dummyapi/v1/pants.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1006,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								178,
+								178
+							]
+						],
+						"settings":
+						{
+							"auto_complete_triggers":
+							[
+								{
+									"characters": ".>:",
+									"selector": "source.c++ - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>:",
+									"selector": "source.c - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>: ",
+									"selector": "source.objc++ - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>: ",
+									"selector": "source.objc - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>: ",
+									"selector": "source.cuda-c++ - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
+								}
+							],
+							"git_gutter_is_enabled": true,
+							"glsv_configured": true,
+							"glsv_enabled": 1,
+							"glsv_spec": 0,
+							"syntax": "Packages/Python/Python.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "src/rapidrest/apiresource.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 772,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								716,
+								716
+							]
+						],
+						"settings":
+						{
+							"auto_complete_triggers":
+							[
+								{
+									"characters": ".>:",
+									"selector": "source.c++ - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>:",
+									"selector": "source.c - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>: ",
+									"selector": "source.objc++ - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>: ",
+									"selector": "source.objc - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>: ",
+									"selector": "source.cuda-c++ - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
+								}
+							],
+							"git_gutter_is_enabled": true,
+							"glsv_configured": true,
+							"glsv_enabled": 1,
+							"glsv_spec": 0,
+							"open_with_edit": true,
+							"syntax": "Packages/Python/Python.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 12,
+					"file": "src/rapidrest_dummyapi/v1/__init__.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 409,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								130,
+								130
+							]
+						],
+						"settings":
+						{
+							"auto_complete_triggers":
+							[
+								{
+									"characters": ".>:",
+									"selector": "source.c++ - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>:",
+									"selector": "source.c - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>: ",
+									"selector": "source.objc++ - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>: ",
+									"selector": "source.objc - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>: ",
+									"selector": "source.cuda-c++ - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
+								}
+							],
+							"git_gutter_is_enabled": true,
+							"glsv_configured": true,
+							"glsv_enabled": 1,
+							"glsv_spec": 0,
+							"syntax": "Packages/Python/Python.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 13,
+					"file": "src/rapidrest_dummyapi/v1/rr_integrations.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 477,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								312,
+								312
+							]
+						],
+						"settings":
+						{
+							"auto_complete_triggers":
+							[
+								{
+									"characters": ".>:",
+									"selector": "source.c++ - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>:",
+									"selector": "source.c - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>: ",
+									"selector": "source.objc++ - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>: ",
+									"selector": "source.objc - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".>: ",
+									"selector": "source.cuda-c++ - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
+								}
+							],
+							"git_gutter_is_enabled": true,
+							"glsv_configured": true,
+							"glsv_enabled": 1,
+							"glsv_spec": 0,
+							"open_with_edit": true,
+							"syntax": "Packages/Python/Python.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 12,
+					"type": "text"
+				}
 			]
 		}
 	],
 	"incremental_find":
 	{
-		"height": 32.0
+		"height": 35.0
 	},
 	"input":
 	{
-		"height": 43.0
+		"height": 45.0
 	},
 	"layout":
 	{
@@ -791,8 +1720,8 @@
 		"cols":
 		[
 			0.0,
-			0.33,
-			0.66,
+			0.296978679147,
+			0.668332266884,
 			1.0
 		],
 		"rows":
@@ -814,7 +1743,7 @@
 	"project": "rapid-rest.sublime-project",
 	"replace":
 	{
-		"height": 60.0
+		"height": 66.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -1240,7 +2169,7 @@
 		],
 		"width": 0.0
 	},
-	"selected_group": 2,
+	"selected_group": 1,
 	"settings":
 	{
 	},
