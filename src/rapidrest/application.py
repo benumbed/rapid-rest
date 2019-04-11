@@ -53,22 +53,23 @@ def enable_vault(app):
         return False
 
     vault_keys = {"VAULT_ROLE_ID", "VAULT_URL", "VAULT_WRAPPED_SECRET", "VAULT_SECRETS_MOUNT", "VAULT_SECRETS_PATH"}
-
     missing_vault_vars = utils.check_required_args(vault_keys, os.environ)
 
     # Login to Vault
     if not missing_vault_vars:
+        log.info("Attempting to log into Vault at %s", os.environ["VAULT_URL"])
         try:
             app.config["vault"] = vaultclient.VaultClient(
                 os.environ["VAULT_URL"],
                 os.environ["VAULT_ROLE_ID"],
                 os.environ["VAULT_WRAPPED_SECRET"]
             )
+            app.config["vault"].login()
         except Exception as e:
             log.error(f"Failed to initialize Vault connection: {e}")
             return False
 
-        if not app.config["vault"].login():
+        if not app.config["vault"].logged_in:
             log.error("Vault login failed")
             return False
 
@@ -82,12 +83,24 @@ def enable_vault(app):
         log.error(f"Vault connection failed, missing environment variables: {missing_vault_vars}")
         return False
 
+    log.info("Successfully connected to Vault")
+    return True
+
+
+def load_secrets_from_vault(app):
+    """
+    Loads the API's secrets from Vault
+
+    @return: True on success, False otherwise
+    """
+    log = app.logger
     vault = app.config["vault"]
+
     # If Vault is enabled, we will fetch the application's keys from Vault storage
     try:
         app.config["api_config"].update(vault.get_secrets(
             os.environ["VAULT_SECRETS_PATH"], os.environ["VAULT_SECRETS_MOUNT"]))
-    except vaultclient.VaultClientError as e:
+    except Exception as e:
         log.error("Could not load secrets from Vault: %s", e)
         del app.config["vault"]
         return False
@@ -138,10 +151,14 @@ def start(*_):
         app.logger.error("Failed to load API: %s", e)
         exit(2)
 
+    vault_enabled = enable_vault(app) if "VAULT_URL" in os.environ else False
     require_vault = bool(os.environ.get("REQUIRE_VAULT", False))
-    if require_vault and not enable_vault(app):
+    if require_vault and vault_enabled:
         app.logger.error("Vault support was required, but enabling Vault failed, exiting")
         exit(1)
+
+    if not load_secrets_from_vault(app):
+        app.logger.warning("Could not load API secrets from Vault")
 
     if "logging" in app.config["api_config"]:
         dictConfig(app.config["api_config"]["logging"])

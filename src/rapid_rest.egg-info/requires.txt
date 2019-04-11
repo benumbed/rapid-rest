@@ -1,5 +1,0 @@
-Flask
-Flask-Security
-
-[Vault]
-hvac>=0.7.2

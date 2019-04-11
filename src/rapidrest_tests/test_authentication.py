@@ -3,11 +3,13 @@
 Tests the rapid-rest authentication layer
 
 """
+import os
 import unittest
 import webtest
 from unittest.mock import patch
 
 from rapidrest import application
+from vaultutilscommon import vaultinstance
 
 
 class TestRapidRestAuthentication(unittest.TestCase):
@@ -17,8 +19,27 @@ class TestRapidRestAuthentication(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
+        cls.v_url, cls.v_root, cls.v_cont = vaultinstance.create(cls.__name__, port=8289, kill_existing=True)
+        cls.approle = "restauthapprole"
+        cls.kv_mountpoint = "basic_kv_v2"
+        vaultinstance.create_kv_v2_store(cls.kv_mountpoint, cls.v_url, cls.v_root, cls.approle)
+        cls.secret_id, cls.role_id = vaultinstance.create_approle(cls.approle, cls.v_url, cls.v_root, wrapped=True,
+                                                                  policies=(f"{cls.approle}-access",))
+
+        os.environ["VAULT_URL"] = cls.v_url
+        os.environ["VAULT_ROLE_ID"] = cls.role_id
+        os.environ["VAULT_WRAPPED_SECRET"] = cls.secret_id
+        os.environ["VAULT_SECRETS_MOUNT"] = cls.kv_mountpoint
+        os.environ["VAULT_SECRETS_PATH"] = "_dynamic"
+
         cls.app = application.start()
         cls.srv = webtest.TestApp(cls.app)
+
+
+    @classmethod
+    def tearDownClass(cls):
+        # If we don't stop the vault client the token refresh process will run indefinitely
+        del cls.app.config["vault"]
 
 
     def test_whitelisting(self):
@@ -55,6 +76,30 @@ class TestRapidRestAuthentication(unittest.TestCase):
 
         with patch.dict(self.app.config["api_config"]["security"]["endpoint_control"], endpoint_patch):
             resp = self.srv.post("/v1/pants", headers={"Authorization":""})
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.content_type, "application/json")
+
+        body_data = resp.json_body
+        self.assertDictEqual(body_data, {"pants_post": True})
+
+
+    def test_authentication(self):
+        """
+        FIXME: THIS IS NOT DONE YET
+
+        @return:
+        """
+        endpoint_patch = {
+            "/v1/pants": {
+                "POST": {
+                    "authentication": True
+                }
+            }
+        }
+
+        with patch.dict(self.app.config["api_config"]["security"]["endpoint_control"], endpoint_patch):
+            resp = self.srv.post("/v1/pants", headers={"Authorization": ""})
 
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.content_type, "application/json")

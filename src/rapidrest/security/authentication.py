@@ -28,7 +28,7 @@ def _get_endpoint_sec_cfg(app:flask.app, url_rule:str):
                                                       url_rule in sec_cfg["endpoint_control"]) else None
 
 
-def _v1_authn_mechanism(app:flask.app, request:flask.request, auth_dict:dict):
+def _v1_authn_mechanism(app:flask.app, request:flask.Request, auth_dict:dict):
     """
     Represents what is classified as the official v1 authentication mechanism
 
@@ -41,8 +41,8 @@ def _v1_authn_mechanism(app:flask.app, request:flask.request, auth_dict:dict):
 
     # Assemble the signed elements into request string
     # HTTP Method + Host + Date + resource (URI) + base64-encoded body
-    sig_elements = [request.method, request.headers["Host"], request.url, request.headers["API-Datestamp"],
-                    base64.encodebytes(request.body)]
+    sig_elements = [request.method, request.headers["Host"], request.url,
+                    base64.encodebytes(request.data).decode("utf-8")]
 
     sig_string = "\n".join(sig_elements)
 
