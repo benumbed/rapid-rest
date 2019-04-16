@@ -15,14 +15,15 @@ from rapidrest.utils import check_required_args
 VALID_AUTH_VERSIONS = ["v1"]
 DEFAULT_AUTH_VERSION = "v1"
 
-def _get_endpoint_sec_cfg(app:flask.app, url_rule:str, method:str):
+def _get_endpoint_sec_cfg(app:flask.app, url_rule:str, method:str) -> dict or None:
     """
     Gets the endpoint's security config
 
     @param app: The Flask application
     @param url_rule: The url rule that was invoked
     @param method: The HTTP method in use
-    @return:
+
+    @return: The security config for the endpoint, else None
     """
     sec_cfg = app.config["api_config"]["security"]
 
