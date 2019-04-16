@@ -3,12 +3,13 @@
 Tests the rapid-rest authentication layer
 
 """
+import json
 import os
 import unittest
 import webtest
 from unittest.mock import patch
 
-from rapidrest import application
+from rapidrest import application, utils
 from vaultutilscommon import vaultinstance
 
 
@@ -22,9 +23,14 @@ class TestRapidRestAuthentication(unittest.TestCase):
         cls.v_url, cls.v_root, cls.v_cont = vaultinstance.create(cls.__name__, port=8289, kill_existing=True)
         cls.approle = "restauthapprole"
         cls.kv_mountpoint = "basic_kv_v2"
+
+        cls.transit_key = "TransitKey"
+        cls.hmac_key = vaultinstance.create_transit_key(cls.transit_key,cls.v_url, cls.v_root, do_setup=True)
+
         vaultinstance.create_kv_v2_store(cls.kv_mountpoint, cls.v_url, cls.v_root, cls.approle)
         cls.secret_id, cls.role_id = vaultinstance.create_approle(cls.approle, cls.v_url, cls.v_root, wrapped=True,
-                                                                  policies=(f"{cls.approle}-access",))
+                                                                  policies=(f"{cls.approle}-access",
+                                                                            f"{cls.transit_key}-use-key"))
 
         os.environ["VAULT_URL"] = cls.v_url
         os.environ["VAULT_ROLE_ID"] = cls.role_id
@@ -84,11 +90,10 @@ class TestRapidRestAuthentication(unittest.TestCase):
         self.assertDictEqual(body_data, {"pants_post": True})
 
 
-    def test_authentication(self):
+    def test_authentication_v1(self):
         """
-        FIXME: THIS IS NOT DONE YET
+        This tests that the v1 authn mechanism works
 
-        @return:
         """
         endpoint_patch = {
             "/v1/pants": {
@@ -98,75 +103,20 @@ class TestRapidRestAuthentication(unittest.TestCase):
             }
         }
 
+        body_data = {
+            "Testing": 123
+        }
+        key_name = "auth_test_key"
+        key = vaultinstance.create_transit_key(key_name, self.v_url, self.v_root)
+        sig = utils.create_hmac_signature(key, json.dumps(body_data).encode("utf-8"))
+
+        auth_string = f"Version:v1;Hash:sha265;Principal:{key_name};Signature:{sig}"
+
         with patch.dict(self.app.config["api_config"]["security"]["endpoint_control"], endpoint_patch):
-            resp = self.srv.post("/v1/pants", headers={"Authorization": ""})
+            resp = self.srv.post("/v1/pants", headers={"Authorization": auth_string}, params=body_data)
 
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.content_type, "application/json")
 
         body_data = resp.json_body
         self.assertDictEqual(body_data, {"pants_post": True})
-
-    # def test_get(self):
-    #     resp = self.srv.post("/v1/pants")
-    #
-    #     print(resp.body)
-    #
-    #     self.assertEqual(resp.status_code, 200)
-    #     self.assertEqual(resp.content_type, "application/json")
-    #
-    #     body_data = resp.json_body
-    #     self.assertDictEqual(body_data, {"pants_post": True})
-
-
-    # def test_get_with_id(self):
-    #     resp = self.srv.get("/v1/pants/1")
-
-    #     self.assertEqual(resp.status_code, 200)
-    #     self.assertEqual(resp.content_type, "application/json")
-
-    #     body_data = resp.json_body
-    #     self.assertDictEqual(body_data, {"example": True, "id": "1"})
-
-
-    # def test_not_found(self):
-    #     """
-    #     @brief      Ensures 404s are generated properly
-        
-    #     @param      self  The object
-    #     """
-    #     resp = self.srv.get("/v1/dne", expect_errors=True)
-
-    #     self.assertEqual(resp.status_code, 404)
-    #     self.assertEqual(resp.content_type, "application/json")
-
-    #     body_data = resp.json_body
-    #     self.assertIn("err", body_data)
-    #     self.assertIn("err_detail", body_data)
-    #     self.assertIn("err_type", body_data)
-
-    #     self.assertEqual(body_data["err"], True)
-    #     self.assertEqual(body_data["err_type"], "Client")
-    #     self.assertIn("404 not found", body_data["err_detail"].lower())
-
-
-    # def test_unknown_error(self):
-    #     """
-    #     @brief      Ensures that non-HTTP errors still get trapped and formatted properly
-        
-    #     @param      self  The object
-    #     """
-    #     resp = self.srv.get("/v1", expect_errors=True)
-
-    #     self.assertEqual(resp.status_code, 500)
-    #     self.assertEqual(resp.content_type, "application/json")
-
-    #     body_data = resp.json_body
-    #     self.assertIn("err", body_data)
-    #     self.assertIn("err_detail", body_data)
-    #     self.assertIn("err_type", body_data)
-
-    #     self.assertEqual(body_data["err"], True)
-    #     self.assertEqual(body_data["err_type"], "Unknown:BananaBlenderError")
-    #     self.assertEqual(body_data["err_detail"], "whoopsie")
-    #     

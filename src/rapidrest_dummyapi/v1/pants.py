@@ -8,13 +8,13 @@ class Pants(ApiResource):
 
     def get(self, obj_id=""):
         """
-        @brief      Example of a GET
-        
-        @param      self  The object
-        
+        Example of a GET
+
+        @param obj_id:
+
         @return     { description_of_the_return_value }
         """
-        if obj_id is not None:
+        if obj_id:
             resp = make_response((jsonify({"pants_get": True, "id": obj_id}), 200))
         else:
             resp = make_response((jsonify({"pants_get": True}), 200))
@@ -23,10 +23,6 @@ class Pants(ApiResource):
 
     def post(self):
         """
-        @brief      { function_description }
 
-        @param      self  The object
-
-        @return     { description_of_the_return_value }
         """
         return make_response(jsonify({"pants_post": True}), 200)

@@ -10,55 +10,68 @@ import base64
 import sys
 import flask
 
-VALID_AUTH_VERSIONS = ["1"]
-DEFAULT_AUTH_VERSION = 1
+from rapidrest.utils import check_required_args
 
-def _get_endpoint_sec_cfg(app:flask.app, url_rule:str):
+VALID_AUTH_VERSIONS = ["v1"]
+DEFAULT_AUTH_VERSION = "v1"
+
+def _get_endpoint_sec_cfg(app:flask.app, url_rule:str, method:str):
     """
     Gets the endpoint's security config
 
     @param app: The Flask application
     @param url_rule: The url rule that was invoked
+    @param method: The HTTP method in use
     @return:
     """
     sec_cfg = app.config["api_config"]["security"]
 
+    prelim_cfg = sec_cfg["endpoint_control"][url_rule] if ("endpoint_control" in sec_cfg and
+                                                      url_rule in sec_cfg["endpoint_control"]) else {}
 
-    return sec_cfg["endpoint_control"][url_rule] if ("endpoint_control" in sec_cfg and
-                                                      url_rule in sec_cfg["endpoint_control"]) else None
+    return prelim_cfg[method] if method in prelim_cfg else None
 
 
-def _v1_authn_mechanism(app:flask.app, request:flask.Request, auth_dict:dict):
+def _v1_authn_mechanism(app:flask.app, request:flask.Request, auth_dict:dict) -> bool:
     """
     Represents what is classified as the official v1 authentication mechanism
+    Authorization: Version:v1;Hash:sha265;Principal:<principal name>;Signature:<sig>
 
-
-    @return: N
+    @return: True if authenticated, False otherwise
     """
     if "vault" not in app.config:
         flask.abort(500, "Authentication requires Vault, which is not enabled")
     vault = app.config["vault"]
+
+    required_auth_keys = ("Version", "Hash", "Principal", "Signature")
+
+    missing_keys = check_required_args(required_auth_keys, auth_dict)
+    if missing_keys:
+        flask.abort(403, f"Invalid Authentication header, missing required keys: {missing_keys}")
 
     # Assemble the signed elements into request string
     # HTTP Method + Host + Date + resource (URI) + base64-encoded body
     sig_elements = [request.method, request.headers["Host"], request.url,
                     base64.encodebytes(request.data).decode("utf-8")]
 
-    sig_string = "\n".join(sig_elements)
-
-    # vault.verify_hmac_signature()
+    return vault.verify_hmac_signature(auth_dict["Principal"], "\n".join(sig_elements), auth_dict["Signature"])
 
 
-def authenticate_endpoint(app:flask.app, request:flask.request):
+def authenticate_endpoint(app:flask.app, request:flask.request) -> bool:
     """
     @brief      Should be run by the dispatch_request hook.  Note that this will abort if auth fails.
 
     @param app: The Flask application
     @param request: The current request
     """
-    sec_cfg = _get_endpoint_sec_cfg(app, str(request.url_rule))
+    sec_cfg = _get_endpoint_sec_cfg(app, str(request.url_rule), request.method)
     if sec_cfg is None and app.config["api_config"]["security"]["whitelist"]:
         flask.abort(403, "This endpoint has no security configuration and whitelisting is enabled")
+
+    # TODO: Whitelisting being disabled implies blacklisting, which is not currently implemented, instead turning off
+    # whitelisting just turns off auth entirely
+    if not app.config["api_config"]["security"]["whitelist"] or sec_cfg:
+        return True
 
     # Check for auth header
     if "Authorization" not in request.headers:
@@ -67,22 +80,24 @@ def authenticate_endpoint(app:flask.app, request:flask.request):
     auth_dict = {}
     for token in request.headers["Authorization"].split(";"):
         try:
-            key, value = token.split("=")
+            key, value = token.split(":")
         except ValueError:
             continue
         auth_dict[key] = value
 
     auth_ver = DEFAULT_AUTH_VERSION
-    if "version" in auth_dict:
-        if auth_dict["version"] not in VALID_AUTH_VERSIONS:
-            flask.abort(400, f"Invalid auth version. Valid versions are: {VALID_AUTH_VERSIONS}")
-        auth_ver = auth_dict["version"]
+    if "Version" in auth_dict:
+        if auth_dict["Version"] not in VALID_AUTH_VERSIONS:
+            flask.abort(403, f"Invalid auth version. Valid versions are: {VALID_AUTH_VERSIONS}")
+        auth_ver = auth_dict["Version"]
+    else:
+        flask.abort(403, "Authorization header does not include Version")
 
-    auth_method = f"_v{auth_ver}_authn_mechanism"
+    auth_method = f"_{auth_ver}_authn_mechanism"
 
     auth_method = getattr(sys.modules[__name__], auth_method, None)
     if auth_method is None:
-        flask.abort(500, f"The v{auth_ver} authentication mechanism is not implemented")
+        flask.abort(400, f"There is no {auth_ver} authentication mechanism")
 
-    auth_method(app, request, auth_dict)
+    return auth_method(app, request, auth_dict)
 

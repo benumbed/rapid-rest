@@ -17,8 +17,11 @@ class TestRapidRest(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        app = application.start()
-        cls.srv = webtest.TestApp(app)
+        cls.app = application.start()
+        # This test suite does not need to test the auth system, so we disable it
+        cls.app.config["api_config"]["security"]["whitelist"] = False
+        cls.srv = webtest.TestApp(cls.app)
+
 
 
     def test_get(self):
@@ -28,7 +31,7 @@ class TestRapidRest(unittest.TestCase):
         self.assertEqual(resp.content_type, "application/json")
 
         body_data = resp.json_body
-        self.assertDictEqual(body_data, {"example": True})
+        self.assertDictEqual(body_data, {"pants_get": True})
 
 
     def test_get_with_id(self):
@@ -38,7 +41,7 @@ class TestRapidRest(unittest.TestCase):
         self.assertEqual(resp.content_type, "application/json")
 
         body_data = resp.json_body
-        self.assertDictEqual(body_data, {"example": True, "id": "1"})
+        self.assertDictEqual(body_data, {"pants_get": True, "id": "1"})
 
 
     def test_not_found(self):
@@ -81,4 +84,3 @@ class TestRapidRest(unittest.TestCase):
         self.assertEqual(body_data["err"], True)
         self.assertEqual(body_data["err_type"], "Unknown:BananaBlenderError")
         self.assertEqual(body_data["err_detail"], "whoopsie")
-        

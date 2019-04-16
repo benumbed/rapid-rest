@@ -2,6 +2,9 @@
 """
 Utilities used throughout the API server
 """
+import base64
+import hashlib
+import hmac
 
 def check_required_args(required_args, provided_args, logger=None, log_msg=None):
     """
@@ -15,7 +18,10 @@ def check_required_args(required_args, provided_args, logger=None, log_msg=None)
     @return     set - Empty set on success, missing args on failure
     """
     log_err = log_msg if log_msg is not None else "Missing required args: {}"
-    provided_args = set(provided_args.keys())
+    if not isinstance(required_args, set):
+        required_args = set(required_args)
+    if not isinstance(provided_args, set):
+        provided_args = set(provided_args)
     response = set()
 
     if not provided_args.issuperset(required_args):
@@ -41,4 +47,18 @@ def apply_needed_defaults(provided_args, defaults):
         provided_args[default] = defaults[default]
 
     return provided_args
-    
+
+
+def create_hmac_signature(key:bytearray, data_to_sign:str, hashmech:hashlib=hashlib.sha256) -> str:
+    """
+    Creates an HMAC signature for the provided data string
+
+    @param key: HMAC key as a bytearray
+    @param data_to_sign: The data that needs to be signed
+    @param hashmech: The hashing mechanism to use, defaults to sha256
+
+    @return: Base64 encoded signature
+    """
+    sig = hmac.new(key, data_to_sign, hashmech).digest()
+
+    return base64.b64encode(sig).decode("utf-8")
