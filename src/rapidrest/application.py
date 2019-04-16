@@ -9,7 +9,6 @@ import os
 from logging.config import dictConfig
 
 from rapidrest import utils, routebuilder, errorhandlers
-from rapidrest.exceptions import *
 
 # TODO: This needs to be configurable
 def _init_logging():
