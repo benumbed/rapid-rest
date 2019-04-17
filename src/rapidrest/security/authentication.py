@@ -65,13 +65,16 @@ def authenticate_endpoint(app:flask.app, request:flask.request) -> bool:
     @param app: The Flask application
     @param request: The current request
     """
-    sec_cfg = _get_endpoint_sec_cfg(app, str(request.url_rule), request.method)
-    if sec_cfg is None and app.config["api_config"]["security"]["whitelist"]:
-        flask.abort(403, "This endpoint has no security configuration and whitelisting is enabled")
-
     # TODO: Whitelisting being disabled implies blacklisting, which is not currently implemented, instead turning off
     # whitelisting just turns off auth entirely
-    if not app.config["api_config"]["security"]["whitelist"] or sec_cfg:
+    if not app.config["api_config"]["security"]["whitelist"]:
+        return True
+
+    sec_cfg = _get_endpoint_sec_cfg(app, str(request.url_rule), request.method)
+    if sec_cfg is None:
+        flask.abort(403, "This endpoint has no security configuration and whitelisting is enabled")
+    # Auth is disabled for this endpoint
+    elif not sec_cfg["authentication"]:
         return True
 
     # Check for auth header
