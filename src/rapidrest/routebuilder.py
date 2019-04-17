@@ -19,12 +19,11 @@ def _load_integrations(app, module, api_path, module_py_path, log):
     integration_boot = getattr(module, "initialize_ext_resources", None)
     if integration_boot is None:
         raise IntegrationBootError(
-            "rr_integrations in %s is missing required 'initialize_ext_resources' method", api_path
-        )
+            f"rr_integrations in {api_path} is missing required 'initialize_ext_resources' method")
 
-    log.debug("Running bootstrap for integrations in %s", api_path)
+    log.debug(f"Running bootstrap for integrations in {api_path}")
     if not integration_boot(app):
-        raise IntegrationBootError("Failed to run integration bootstrap for %s", module_py_path)
+        raise IntegrationBootError(f"Failed to run integration bootstrap for {module_py_path}")
 
 
 def _add_url_rule(app, url, view, log, method_map=None):
@@ -80,10 +79,10 @@ def _resource_initializer(app, root, module, log):
     res_class_name = module_name.capitalize()
     resource_class = getattr(module, res_class_name, None)
     if resource_class is None:
-        log.warning("%s does not have the expected class '%s', skipping", module_py_path, res_class_name)
+        log.warning(f"{module_py_path} does not have the expected class '{res_class_name}', skipping")
         return
     elif getattr(resource_class, "as_view", None) is None:
-        log.warning("%s.%s does not inherit from flask.views.MethodView, skipping", module_py_path, res_class_name)
+        log.warning(f"{module_py_path}.{res_class_name} does not inherit from flask.views.MethodView, skipping")
         return
 
     # Create url rule(s)
@@ -127,9 +126,9 @@ def load_api(app, api_path, _root=""):
     try:
         api_resource = importlib.import_module(api_path)
     except ImportError:
-        raise RouteBuilderError("Failed to load the API at '%s'", api_path)
+        raise RouteBuilderError(f"Failed to load the API at '{api_path}'")
 
-    log.debug("Found API resource at '%s', attempting to load it", api_path)
+    log.debug(f"Found API resource at '{api_path}', attempting to load it")
 
     base_resource_name = api_resource.__name__.split(".")[-1]
     sub_resource_root = f"{_root}.{base_resource_name}" if _root else base_resource_name

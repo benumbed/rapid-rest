@@ -1,5 +1,5 @@
 Flask
-Flask-Security
+pyyaml
 
 -e git+https://gitlab+deploy-token-1:Vsx-AU5b2JWNU7KyaizR@gitlab.bunker/global/vault-utils.git#egg=vault-utils[vaultinstance]
 -e .

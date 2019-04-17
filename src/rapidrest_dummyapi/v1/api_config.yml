@@ -1,0 +1,14 @@
+---
+api_name: RapidRest Dummy API
+logging:
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  level: DEBUG
+
+security:
+  whitelist: true
+  # These are defaults, they can be overridden
+  endpoint_control:
+    "/health":
+      GET:
+        authentication:
+          required: false
