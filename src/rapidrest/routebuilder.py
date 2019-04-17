@@ -138,6 +138,7 @@ def load_api(app, api_path, _root=""):
     _resource_initializer(app, _root, api_resource, log)
 
     # Now we do some magic to traverse the package and find all the sub-resources we need to load
+    log.debug(f"About to walk packages for {api_resource.__path__}")
     for module_info in pkgutil.walk_packages(api_resource.__path__):
         module_py_path = f"{api_path}.{module_info.name}"
         log.debug(f"Handling {module_py_path}")
