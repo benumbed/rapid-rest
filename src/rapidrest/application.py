@@ -126,7 +126,12 @@ def load_api_config(api_py_root) -> dict:
         log.error(f"Failed to load 'api_config.yml' from {api_py_root}")
         return {}
 
-    api_config_path = "{}/api_config.yml".format(api_resource.__path__[0])
+    try:
+        api_config_path = "{}/api_config.yml".format(api_resource.__path__[0])
+    except TypeError:
+        log.error("It looks like the API root is missing an __init__.py file")
+        return {}
+    
     if not os.path.exists(api_config_path):
         log.error(f"The config file '{api_config_path}' does not exist")
         return {}
