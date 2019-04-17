@@ -145,7 +145,7 @@ def load_api(app, api_path, _root=""):
 
         # If the 'module' is actually a package, we need to recurse to handle it
         if module_info.ispkg :
-            log.debug(f"Recursing to handle {sub_resource_root}")
+            log.debug(f"Recursing to handle {module_py_path}")
             load_api(app, module_py_path, _root=sub_resource_root)
 
         try:
