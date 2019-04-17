@@ -145,12 +145,15 @@ def load_api(app, api_path, _root=""):
 
         # If the 'module' is actually a package, we need to recurse to handle it
         if module_info.ispkg :
+            log.debug(f"Recursing to handle {sub_resource_root}")
             load_api(app, module_py_path, _root=sub_resource_root)
 
         try:
             module = importlib.import_module(module_py_path)
         except ImportError as e:
             raise RouteBuilderError(f"Failed to import API resource {module_py_path}: {e}")
+
+        log.debug(f"Imported module {module}")
 
         # Load integrations for this resource, if needed
         if module_info.name == "rr_integrations":
