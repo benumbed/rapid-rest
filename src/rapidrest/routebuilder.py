@@ -141,6 +141,8 @@ def load_api(app, api_path, _root=""):
     log.debug(f"About to walk packages for {api_resource.__path__}")
     for module_info in pkgutil.walk_packages(api_resource.__path__):
         module_py_path = f"{api_path}.{module_info.name}"
+        if module_py_path == api_resource.__path__:
+            continue
         log.debug(f"Handling {module_py_path}")
 
         # If the 'module' is actually a package, we need to recurse to handle it
