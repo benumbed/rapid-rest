@@ -1,6 +1,6 @@
 from flask import jsonify, make_response
 
-from rapidrest.apiresource import ApiResource
+from rapidrest.apiresource import ApiResource, ApiResponse
 
 class Pants(ApiResource):
     endpoint_name = "pants"
@@ -25,4 +25,4 @@ class Pants(ApiResource):
         """
 
         """
-        return make_response(jsonify({"pants_post": True}), 200)
+        return ApiResponse(body={"pants_post": True}, status_code=200)
