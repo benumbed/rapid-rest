@@ -27,15 +27,15 @@ def _load_integrations(app, module, api_path, module_py_path, log):
         raise IntegrationBootError("Failed to run integration bootstrap for %s", module_py_path)
 
 
-def _add_url_rule(app, url, view, log, id_rule=False):
+def _add_url_rule(app, url, view, log, id_params=None):
     """
-    @brief      Adds an url rule.
+    Adds an url rule.
     
-    @param      app             The application
-    @param      url             The url
-    @param      resource_class  The resource class
-    @param      log             The log
-    @param      id_rule         Indicates this is a request for a rule with /<id> on the end of it
+    @param app:             The application
+    @param url:             The url
+    @param view:            The view method
+    @param log:             The log
+    @param id_params:       Indicates this is a request for a rule with /<id> on the end of it
     
     @return     The view method or None
     """
@@ -46,8 +46,9 @@ def _add_url_rule(app, url, view, log, id_rule=False):
     )
     log.debug("Added endpoint '%s'", url)
 
-    if id_rule:
-        rule = f"{url}/<obj_id>"
+    if id_params is not None and id_params:
+        obj_id = id_params[0]   # Will always be the first _id... theoretically
+        rule = f"{url}/<{obj_id}>"
         app.add_url_rule(
             rule,
             # The lambda obfuscates the view func, so Flask won't complain about the same method being used for the 
@@ -56,7 +57,7 @@ def _add_url_rule(app, url, view, log, id_rule=False):
         )
         log.debug(f"Added 'id' endpoint '{rule}'")
 
-    return view if not id_rule else None
+    return view if not id_params else None
 
 
 def _gather_restrictions(app, ep_class, log):
@@ -97,20 +98,19 @@ def _resource_initializer(app, root, module, log):
     view = resource_class.as_view(resource_class.endpoint_name)
 
     # Create an 'id' endpoint if the methods in this resource need it
-    needs_id_rule = False
+    id_params = []
     for method in view.view_class.methods:
         meth_sig = signature(getattr(view.view_class, method.lower()))
 
+        id_params = ([name for name in meth_sig.parameters if name.endswith("_id")])
         # We have to check for both required ID methods and methods which can optionally have one
-        if method in required_id_methods and "obj_id" not in meth_sig.parameters:
+        if method in required_id_methods and not id_params:
             raise RouteBuilderError(f"Method '{method}' in {module_py_path} is required to have an 'obj_id' parameter")
-        elif method in optional_id_methods and "obj_id" not in meth_sig.parameters:
+        elif method in optional_id_methods and not id_params:
             continue
 
-        needs_id_rule = True
-
     log.debug(f"Adding view for {url}")
-    _add_url_rule(app, url, view, log, id_rule=needs_id_rule)
+    _add_url_rule(app, url, view, log, id_params=id_params)
 
 
 
@@ -156,4 +156,5 @@ def load_api(app, api_path, _root=""):
             _load_integrations(app, module, api_path, module_py_path, log)
             continue
 
+        log.debug(f"Initializing resource {module_py_path}")
         _resource_initializer(app, sub_resource_root, module, log)

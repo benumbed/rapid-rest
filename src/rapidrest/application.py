@@ -156,7 +156,7 @@ def start(*_):
         app.logger.error("Vault support was required, but enabling Vault failed, exiting")
         exit(1)
 
-    if not load_secrets_from_vault(app):
+    if vault_enabled and not load_secrets_from_vault(app):
         app.logger.warning("Could not load API secrets from Vault")
 
     if "logging" in app.config["api_config"]:
