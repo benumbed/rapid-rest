@@ -27,7 +27,8 @@ class ApiResource(MethodView):
         @return     { description_of_the_return_value }
         """
         # Tie in authentication and authorization
-        authentication.authenticate_endpoint(current_app, request)
+        if not authentication.authenticate_endpoint(current_app, request):
+            abort(403, "Authentication Failed")
 
         resp = super().dispatch_request(*args, **kwargs)
 

@@ -7,13 +7,42 @@ server operations.  This ensures that services do not need to know the users' en
 
 """
 import base64
-import sys
 import flask
+import hashlib
+import hmac
+import sys
 
 from rapidrest.utils import check_required_args
 
 VALID_AUTH_VERSIONS = ["v1"]
 DEFAULT_AUTH_VERSION = "v1"
+
+def create_hmac_signature(key:bytes, data_to_sign:str, hashmech:hashlib=hashlib.sha256) -> str:
+    """
+    Creates an HMAC signature for the provided data string
+
+    @param key: HMAC key as bytes
+    @param data_to_sign: The data that needs to be signed
+    @param hashmech: The hashing mechanism to use, defaults to sha256
+
+    @return: Base64 encoded signature
+    """
+    sig = hmac.new(key, data_to_sign.encode("utf-8"), hashmech).digest()
+
+    return base64.b64encode(sig).decode("utf-8")
+
+
+def create_v1_auth_header(principal_name:str, principal_key:bytes, method:str, host:str, url:str, body:str="") -> str:
+    """
+    Creates a v1 auth header
+
+    :return: The v1 auth header
+    """
+    sig_elements = [method, host, url, base64.encodebytes(body.encode("utf-8")).decode("utf-8")]
+
+    sig = create_hmac_signature(principal_key, "\n".join(sig_elements))
+    return f"Version:v1;Hash:sha265;Principal:{principal_name};Signature:{sig}"
+
 
 def _get_endpoint_sec_cfg(app:flask.app, url_rule:str, method:str) -> dict or None:
     """
@@ -51,8 +80,10 @@ def _v1_authn_mechanism(app:flask.app, request:flask.Request, auth_dict:dict) ->
         flask.abort(403, f"Invalid Authentication header, missing required keys: {missing_keys}")
 
     # Assemble the signed elements into request string
-    # HTTP Method + Host + Date + resource (URI) + base64-encoded body
-    sig_elements = [request.method, request.headers["Host"], request.url,
+    # NOTE: Werkzeug will return a ? at the end of full_path regardless of whether there's a query string or not, so it
+    # has to be stripped, as we can't expect users to remember to add a ? on the end of all their paths they sign
+    path = request.full_path.rstrip("?") if request.full_path.endswith("?") else request.full_path
+    sig_elements = [request.method, request.headers["Host"], path,
                     base64.encodebytes(request.data).decode("utf-8")]
 
     return vault.verify_hmac_signature(auth_dict["Principal"], "\n".join(sig_elements), auth_dict["Signature"])
