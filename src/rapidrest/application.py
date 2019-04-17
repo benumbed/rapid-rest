@@ -151,6 +151,8 @@ def start(*_):
     """
     api_root = os.environ.get("API_ROOT", "rapidrest_dummyapi.v1")
     api_cfg = load_api_config(api_root)
+    if not api_cfg:
+        exit(3)
 
     if not bool(os.environ.get("DISABLE_ROOT_LOGGER", False)):
         log_cfg = api_cfg["logging"] if "logging" in api_cfg else {}
