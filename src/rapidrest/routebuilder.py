@@ -76,7 +76,7 @@ def _resource_initializer(app, root, module, log):
     @param      module  The module
     @param      log     The log
     """
-    reqired_id_methods = {"PUT", "DELETE", "PATCH"}
+    required_id_methods = {"PUT", "DELETE", "PATCH"}
     optional_id_methods = {"GET"}
 
     module_name = module.__name__.split(".")[-1]
@@ -102,13 +102,14 @@ def _resource_initializer(app, root, module, log):
         meth_sig = signature(getattr(view.view_class, method.lower()))
 
         # We have to check for both required ID methods and methods which can optionally have one
-        if method in reqired_id_methods and "obj_id" not in meth_sig.parameters:
+        if method in required_id_methods and "obj_id" not in meth_sig.parameters:
             raise RouteBuilderError(f"Method '{method}' in {module_py_path} is required to have an 'obj_id' parameter")
         elif method in optional_id_methods and "obj_id" not in meth_sig.parameters:
             continue
 
         needs_id_rule = True
 
+    log.debug(f"Adding view for {url}")
     _add_url_rule(app, url, view, log, id_rule=needs_id_rule)
 
 
@@ -139,6 +140,7 @@ def load_api(app, api_path, _root=""):
     # Now we do some magic to traverse the package and find all the sub-resources we need to load
     for module_info in pkgutil.walk_packages(api_resource.__path__):
         module_py_path = f"{api_path}.{module_info.name}"
+        log.debug(f"Handling {module_py_path}")
 
         # If the 'module' is actually a package, we need to recurse to handle it
         if module_info.ispkg :
