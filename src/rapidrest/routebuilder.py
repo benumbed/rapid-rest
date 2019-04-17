@@ -3,8 +3,8 @@
 Application layer for the Rapid-REST server
 """
 import importlib
+import inspect
 import pkgutil
-from inspect import signature
 
 
 class RouteBuilderError(Exception): pass
@@ -27,37 +27,32 @@ def _load_integrations(app, module, api_path, module_py_path, log):
         raise IntegrationBootError("Failed to run integration bootstrap for %s", module_py_path)
 
 
-def _add_url_rule(app, url, view, log, id_params=None):
+def _add_url_rule(app, url, view, log, method_map=None):
     """
     Adds an url rule.
     
-    @param app:             The application
-    @param url:             The url
-    @param view:            The view method
-    @param log:             The log
-    @param id_params:       Indicates this is a request for a rule with /<id> on the end of it
-    
-    @return     The view method or None
+    @param app:                 The application
+    @param url:                 The url
+    @param view:                The view method
+    @param log:                 The logger
+    @param method_map:          Maps methods to their _id parameters
     """
     app.add_url_rule(
         url,
         view_func=view,
-        provide_automatic_options=True
+        provide_automatic_options=True,
+        methods=method_map["non-id"]
     )
-    log.debug("Added endpoint '%s'", url)
+    log.debug(f"Added endpoint {url}")
 
-    if id_params is not None and id_params:
-        obj_id = id_params[0]   # Will always be the first _id... theoretically
-        rule = f"{url}/<{obj_id}>"
+    for method, id_param in method_map["id"].items():
+        rule = f"{url}/<{id_param}>"
         app.add_url_rule(
             rule,
-            # The lambda obfuscates the view func, so Flask won't complain about the same method being used for the 
-            # id call
-            view_func=lambda *args, **kwargs: view(*args, **kwargs),
+            view_func=view,
+            methods=[method]
         )
         log.debug(f"Added 'id' endpoint '{rule}'")
-
-    return view if not id_params else None
 
 
 def _gather_restrictions(app, ep_class, log):
@@ -77,9 +72,6 @@ def _resource_initializer(app, root, module, log):
     @param      module  The module
     @param      log     The log
     """
-    required_id_methods = {"PUT", "DELETE", "PATCH"}
-    optional_id_methods = {"GET"}
-
     module_name = module.__name__.split(".")[-1]
     module_py_path = f"{root}.{module_name}" if root else f"{module_name}"
     url = "/{}".format("/".join(module_py_path.split(".")))
@@ -97,20 +89,27 @@ def _resource_initializer(app, root, module, log):
     # Create url rule(s)
     view = resource_class.as_view(resource_class.endpoint_name)
 
-    # Create an 'id' endpoint if the methods in this resource need it
-    id_params = []
+    # Make sure that methods that need 'id'-type rules get them
+    method_map = { "non-id": [], "id": {} }
     for method in view.view_class.methods:
-        meth_sig = signature(getattr(view.view_class, method.lower()))
+        meth_sig = inspect.signature(getattr(view.view_class, method.lower()))
 
-        id_params = ([name for name in meth_sig.parameters if name.endswith("_id")])
-        # We have to check for both required ID methods and methods which can optionally have one
-        if method in required_id_methods and not id_params:
-            raise RouteBuilderError(f"Method '{method}' in {module_py_path} is required to have an 'obj_id' parameter")
-        elif method in optional_id_methods and not id_params:
-            continue
+        id_params = [param_obj for param_obj in meth_sig.parameters.values() if param_obj.name.endswith("_id")]
+        if id_params:
+            method_map["id"][method] = id_params[0].name
+
+        if id_params and id_params[0].default == inspect.Parameter.empty:
+            pass
+        else:
+            method_map["non-id"].append(method)
+
+        # Some methods have to have an ID for them to function
+        if method in {"PUT", "DELETE", "PATCH"} and method not in method_map["id"]:
+            raise RouteBuilderError(str(f"Method '{method}' in {module_py_path} is required to have an '_id'-style "
+                                    "parameter"))
 
     log.debug(f"Adding view for {url}")
-    _add_url_rule(app, url, view, log, id_params=id_params)
+    _add_url_rule(app, url, view, log, method_map=method_map)
 
 
 
@@ -135,10 +134,13 @@ def load_api(app, api_path, _root=""):
     base_resource_name = api_resource.__name__.split(".")[-1]
     sub_resource_root = f"{_root}.{base_resource_name}" if _root else base_resource_name
 
-    _resource_initializer(app, _root, api_resource, log)
+    # This should only run at the very beginning, probably a better way to do this but I'm braindead
+    if not _root:
+        _resource_initializer(app, _root, api_resource, log)
 
     # Now we do some magic to traverse the package and find all the sub-resources we need to load
     log.debug(f"About to walk packages for {api_resource.__path__}")
+
     for module_info in pkgutil.walk_packages(api_resource.__path__):
         module_py_path = f"{api_path}.{module_info.name}"
         if module_py_path == api_resource.__path__:
