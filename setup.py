@@ -17,7 +17,12 @@ setup(
     author='Benumbed',
     author_email='benumbed@projectneutron.com',
     package_dir={'': 'src'},
-    packages=find_packages(),
+    packages=[
+      "rapidrest",
+      "rapidrest.security",
+      "rapidrest_dummyapi",
+      "rapidrest_tests",
+    ],
     install_requires = import_requires(),
     extras_require = {
         "Vault": ["hvac>=0.7.2"],
