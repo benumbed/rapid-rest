@@ -10,7 +10,7 @@ def import_requires():
 
 setup(
     name="rapid-rest",
-    version="0.2.3",
+    version="0.3.0",
     url='https://gitlab.bunker/global/rapid-rest',
     description="Rapid development REST API server built on Flask and friends",
     license='MIT',
