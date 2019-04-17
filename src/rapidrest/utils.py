@@ -49,16 +49,16 @@ def apply_needed_defaults(provided_args, defaults):
     return provided_args
 
 
-def create_hmac_signature(key:bytearray, data_to_sign:str, hashmech:hashlib=hashlib.sha256) -> str:
+def create_hmac_signature(key:bytes, data_to_sign:str, hashmech:hashlib=hashlib.sha256) -> str:
     """
     Creates an HMAC signature for the provided data string
 
-    @param key: HMAC key as a bytearray
+    @param key: HMAC key as bytes
     @param data_to_sign: The data that needs to be signed
     @param hashmech: The hashing mechanism to use, defaults to sha256
 
     @return: Base64 encoded signature
     """
-    sig = hmac.new(key, data_to_sign, hashmech).digest()
+    sig = hmac.new(key, data_to_sign.encode("utf-8"), hashmech).digest()
 
     return base64.b64encode(sig).decode("utf-8")
