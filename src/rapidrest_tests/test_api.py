@@ -99,7 +99,6 @@ class TestRapidRest(unittest.TestCase):
 
         self.assertDictEqual(resp.json_body, sent_body)
 
-        
         sent_body_v2 = {
             "sent": False,
             "body": "by Pants McGee"

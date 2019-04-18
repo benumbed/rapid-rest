@@ -19,7 +19,7 @@ def _load_integrations(app, module, api_path, module_py_path, log):
     integration_boot = getattr(module, "initialize_ext_resources", None)
     if integration_boot is None:
         raise IntegrationBootError(
-            f"rr_integrations in {api_path} is missing required 'initialize_ext_resources' method")
+            f"ext_integrations.py in {api_path} is missing required 'initialize_ext_resources' method")
 
     log.debug(f"Running bootstrap for integrations in {api_path}")
     if not integration_boot(app):
@@ -159,7 +159,7 @@ def load_api(app, api_path, _root=""):
         log.debug(f"Imported module {module}")
 
         # Load integrations for this resource, if needed
-        if module_info.name == "rr_integrations":
+        if module_info.name == "ext_integrations":
             _load_integrations(app, module, api_path, module_py_path, log)
             continue
 
