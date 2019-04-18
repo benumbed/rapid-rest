@@ -1,8 +1,8 @@
-from flask.views import MethodView
+from rapidrest.apiresource import ApiResource, ApiResponse
 
 class BananaBlenderError(Exception): pass
 
-class V1(MethodView):
+class V1(ApiResource):
     endpoint_name = "v1"
     description = "Root endpoint"
     
@@ -15,4 +15,6 @@ class V1(MethodView):
         @return     { description_of_the_return_value }
         """
         raise BananaBlenderError("whoopsie")
-        
+
+    def post(self):
+        return ApiResponse(body=self._current_request.body, status_code=201)

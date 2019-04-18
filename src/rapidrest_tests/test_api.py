@@ -84,3 +84,26 @@ class TestRapidRest(unittest.TestCase):
         self.assertEqual(body_data["err"], True)
         self.assertEqual(body_data["err_type"], "Unknown:BananaBlenderError")
         self.assertEqual(body_data["err_detail"], "whoopsie")
+
+
+    def test_attached_current_request(self):
+        """
+        Ensures that the current request is attached to the resource class
+
+        """
+        sent_body = {
+            "sent": True,
+            "body": "by Bob Barker"
+        }
+        resp = self.srv.post_json("/v1", sent_body)
+
+        self.assertDictEqual(resp.json_body, sent_body)
+
+        
+        sent_body_v2 = {
+            "sent": False,
+            "body": "by Pants McGee"
+        }
+        resp = self.srv.post_json("/v1", sent_body_v2)
+
+        self.assertDictEqual(resp.json_body, sent_body_v2)

@@ -2,8 +2,6 @@
 """
 Utilities used throughout the API server
 """
-import base64
-
 
 def check_required_args(required_args, provided_args, logger=None, log_msg=None):
     """

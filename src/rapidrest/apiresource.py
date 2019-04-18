@@ -10,12 +10,18 @@ from flask.views import MethodView
 from rapidrest.security import authentication
 
 ApiResponse = namedtuple("ApiResponse", field_names=("body", "status_code", "headers"), defaults=({},))
+ApiRequest = namedtuple("ApiRequest", field_names=("headers", "body", "flask_request"))
 
 class ApiResource(MethodView):
     """
     @brief      Class for api resource.
     """
-    restrictions = {}
+
+    def __init__(self, *args, **kwargs):
+        self._current_request = None
+
+        super().__init__(*args, **kwargs)
+
 
     def dispatch_request(self, *args, **kwargs):
         """
@@ -29,6 +35,8 @@ class ApiResource(MethodView):
         # Tie in authentication and authorization
         if not authentication.authenticate_endpoint(current_app, request):
             abort(403, "Authentication Failed")
+
+        self._current_request = ApiRequest(body=request.get_json(), headers=request.headers, flask_request=request)
 
         resp = super().dispatch_request(*args, **kwargs)
 
@@ -44,5 +52,4 @@ class ApiResource(MethodView):
 
             return actual_resp
 
-        else:
-            abort(500, "API resource did not return a known response type")
+        abort(500, "API resource did not return a known response type")
