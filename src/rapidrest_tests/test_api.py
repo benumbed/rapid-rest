@@ -106,3 +106,10 @@ class TestRapidRest(unittest.TestCase):
         resp = self.srv.post_json("/v1", sent_body_v2)
 
         self.assertDictEqual(resp.json_body, sent_body_v2)
+
+
+    def test_integration_init(self):
+        import os
+        from rapidrest_dummyapi.v1 import ext_integrations
+
+        self.assertEqual(ext_integrations.INTEGRATION_MAP["API_ROOT"], os.environ["API_ROOT"])

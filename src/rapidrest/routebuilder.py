@@ -6,24 +6,7 @@ import importlib
 import inspect
 import pkgutil
 
-
 class RouteBuilderError(Exception): pass
-class IntegrationBootError(RouteBuilderError): pass
-
-
-def _load_integrations(app, module, api_path, module_py_path, log):
-    """
-    @brief      Loads integrations.
-
-    """
-    integration_boot = getattr(module, "initialize_ext_resources", None)
-    if integration_boot is None:
-        raise IntegrationBootError(
-            f"ext_integrations.py in {api_path} is missing required 'initialize_ext_resources' method")
-
-    log.debug(f"Running bootstrap for integrations in {api_path}")
-    if not integration_boot(app):
-        raise IntegrationBootError(f"Failed to run integration bootstrap for {module_py_path}")
 
 
 def _add_url_rule(app, url, view, log, method_map=None):
@@ -53,14 +36,6 @@ def _add_url_rule(app, url, view, log, method_map=None):
         )
         log.debug(f"Added 'id' endpoint '{rule}'")
 
-
-def _gather_restrictions(app, ep_class, log):
-    """
-    @brief      Gathers an endpoint's restrictions
-    
-    @return     { description_of_the_return_value }
-    """
-    pass
 
 def _resource_initializer(app, root, module, log):
     """
@@ -111,17 +86,19 @@ def _resource_initializer(app, root, module, log):
     _add_url_rule(app, url, view, log, method_map=method_map)
 
 
-
-
-def load_api(app, api_path, _root=""):
+def load_api(app, api_path, _root="") -> list:
     """
-    @brief      Loads an api.
+    Loads an API
     
-    @param      app       The application
-    @param      api_path  The Python path to the API package
-    @param      _root     Used for recursion, do not set this
+    :param app:                     The application
+    :param api_path:                The Python path to the API package
+    :param _root:                   Used for recursion, do not set this
+
+    :return The API integration modules (modules which define required external integrations that the API resources
+            need)
     """
     log = app.logger
+    api_integration_modules = []
 
     try:
         api_resource = importlib.import_module(api_path)
@@ -158,10 +135,12 @@ def load_api(app, api_path, _root=""):
 
         log.debug(f"Imported module {module}")
 
-        # Load integrations for this resource, if needed
+        # If this is an external integrations initializer module, record it so we can use it later
         if module_info.name == "ext_integrations":
-            _load_integrations(app, module, api_path, module_py_path, log)
+            api_integration_modules.append(module)
             continue
 
         log.debug(f"Initializing resource {module_py_path}")
         _resource_initializer(app, sub_resource_root, module, log)
+
+    return api_integration_modules

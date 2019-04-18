@@ -10,7 +10,7 @@ import os
 import yaml
 from logging.config import dictConfig
 
-from rapidrest import utils, routebuilder, errorhandlers
+from rapidrest import utils, routebuilder, errorhandlers, integrations
 
 def _init_logging(level:str="DEBUG", format:str="%(asctime)s - %(name)s - %(levelname)s - %(message)s"):
     """
@@ -89,26 +89,26 @@ def enable_vault(app):
     return True
 
 
-def load_secrets_from_vault(app):
+def load_secrets_from_vault(app) -> dict:
     """
     Loads the API's secrets from Vault
 
-    @return: True on success, False otherwise
+    :param app: The Flask app
+
+    :return Dictionary of secrets on success, empty dict otherwise
     """
     log = app.logger
     vault = app.config["vault"]
 
     # If Vault is enabled, we will fetch the application's keys from Vault storage
     try:
-        app.config["api_config"].update(vault.get_secrets(
-            os.environ["VAULT_SECRETS_PATH"], os.environ["VAULT_SECRETS_MOUNT"]))
+        secrets = vault.get_secrets(os.environ["VAULT_SECRETS_PATH"], os.environ["VAULT_SECRETS_MOUNT"])
     except Exception as e:
         log.error("Could not load secrets from Vault: %s", e)
-        del app.config["vault"]
-        return False
+        return dict()
 
     log.info("Loaded secrets from Vault")
-    return True
+    return secrets
 
 
 def load_api_config(api_py_root) -> dict:
@@ -154,7 +154,10 @@ def start(*_):
     
     @return     WSGI application
     """
-    api_root = os.environ.get("API_ROOT", "rapidrest_dummyapi.v1")
+    api_root = os.environ.get("API_ROOT", None)
+    if os.environ.get("API_ROOT", None) is None:
+        # We set the environment in this case for the tests
+        api_root = os.environ["API_ROOT"] = "rapidrest_dummyapi.v1"
     api_cfg = load_api_config(api_root)
     if not api_cfg:
         exit(3)
@@ -169,8 +172,9 @@ def start(*_):
     app.config["api_config"] = api_cfg
 
     # Load the API before we load secrets, so we know what the API needs
+    integration_modules = list()
     try:
-        routebuilder.load_api(app, api_root)
+        integration_modules = routebuilder.load_api(app, api_root)
     except routebuilder.RouteBuilderError as e:
         app.logger.error("Failed to load API: %s", e)
         exit(2)
@@ -181,7 +185,14 @@ def start(*_):
         app.logger.error("Vault support was required, but enabling Vault failed, exiting")
         exit(1)
 
-    if vault_enabled and not load_secrets_from_vault(app):
-        app.logger.warning("Could not load API secrets from Vault")
+    app.config["api_config"]["secrets"] = dict()
+    if vault_enabled:
+        app.config["api_config"]["secrets"] = load_secrets_from_vault(app)
+
+    try:
+        integrations.initialize_api_integrations(integration_modules, app.config["api_config"])
+    except Exception:
+        del app.config["vault"]
+        raise
 
     return app
