@@ -3,7 +3,7 @@
 Basic error handlers
 
 """
-from flask import jsonify, make_response
+from flask import jsonify, make_response, current_app
 from werkzeug.exceptions import HTTPException
 
 def register_handlers(app):
@@ -53,5 +53,7 @@ def _handle_unregistered(err):
         "err_type": f"Unknown:{err.__class__.__name__}",
         "err_detail": str(err)
     }
+
+    current_app.logger.exception(err)
 
     return make_response(jsonify(resp), 500)
