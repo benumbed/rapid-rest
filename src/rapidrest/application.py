@@ -48,7 +48,7 @@ def enable_vault(app):
     log = app.logger
 
     try:
-        # We don't use hvac directly, vaultclient abstracts some stuff away and makes Vault a bit easier to use
+        # We don't (always) use hvac directly, vaultclient abstracts some stuff away and makes Vault a bit easier to use
         vaultclient = importlib.import_module("vaultclient")
     except ImportError:
         log.info("vaultclient package not available, disabling Vault support")
@@ -170,6 +170,7 @@ def start(*_):
     app.logger.name = api_root
     errorhandlers.register_handlers(app)
     app.config["api_config"] = api_cfg
+    app.config["vault"] = None
 
     # Load the API before we load secrets, so we know what the API needs
     integration_modules = list()

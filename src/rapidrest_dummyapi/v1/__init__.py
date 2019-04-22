@@ -17,4 +17,15 @@ class V1(ApiResource):
         raise BananaBlenderError("whoopsie")
 
     def post(self):
-        return ApiResponse(body=self._current_request.body, status_code=201)
+        """
+        This is used to test objects that are auto-attached to the resource instance
+        :return:
+        """
+        return ApiResponse(
+            body={
+                "body": self._current_request.body,
+                "vault": str(self._vault),
+                "api_config": self._api_config,
+            },
+            status_code=201
+        )

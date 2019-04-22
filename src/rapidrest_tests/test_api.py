@@ -5,21 +5,26 @@ Tests the rapid-rest system
 """
 import unittest
 import webtest
+from unittest.mock import patch
 
 from rapidrest import application
 
 # TODO: Need to test the integration setup/mapping system
 
-class TestRapidRest(unittest.TestCase):
+class TestAPI(unittest.TestCase):
     """
     @brief      Class for testing rapid rest.
     """
 
     @classmethod
     def setUpClass(cls):
+        class FakeVaultClient: pass
+        cls.fvc = FakeVaultClient()
+
         cls.app = application.start()
         # This test suite does not need to test the auth system, so we disable it
         cls.app.config["api_config"]["security"]["whitelist"] = False
+        cls.app.config["vault"] = cls.fvc
         cls.srv = webtest.TestApp(cls.app)
 
 
@@ -86,7 +91,7 @@ class TestRapidRest(unittest.TestCase):
         self.assertEqual(body_data["err_detail"], "whoopsie")
 
 
-    def test_attached_current_request(self):
+    def test_attached_items(self):
         """
         Ensures that the current request is attached to the resource class
 
@@ -97,15 +102,9 @@ class TestRapidRest(unittest.TestCase):
         }
         resp = self.srv.post_json("/v1", sent_body)
 
-        self.assertDictEqual(resp.json_body, sent_body)
-
-        sent_body_v2 = {
-            "sent": False,
-            "body": "by Pants McGee"
-        }
-        resp = self.srv.post_json("/v1", sent_body_v2)
-
-        self.assertDictEqual(resp.json_body, sent_body_v2)
+        self.assertDictEqual(resp.json_body["body"], sent_body)
+        self.assertEqual(resp.json_body["vault"], str(self.fvc))
+        self.assertDictEqual(resp.json_body["api_config"], self.app.config["api_config"])
 
 
     def test_integration_init(self):
