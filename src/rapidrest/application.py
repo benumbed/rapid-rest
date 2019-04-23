@@ -191,7 +191,7 @@ def start(*_):
         app.config["api_config"]["secrets"] = load_secrets_from_vault(app)
 
     try:
-        integrations.initialize_api_integrations(integration_modules, app.config["api_config"])
+        integrations.initialize_api_integrations(integration_modules, app.config["api_config"], app.config["vault"])
     except Exception:
         del app.config["vault"]
         raise

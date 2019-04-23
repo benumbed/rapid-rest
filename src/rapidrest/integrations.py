@@ -7,6 +7,7 @@ import logging
 import os
 
 from rapidrest.exceptions import IntegrationLoadError
+from vaultclient import VaultClient
 
 log = logging.getLogger(__name__)
 
@@ -28,24 +29,26 @@ def integrations_required_keys(modules:list) -> set:
     return req_keys
 
 
-def initialize_api_integrations(modules:list, api_config:dict):
+def initialize_api_integrations(modules:list, api_config:dict, vault:VaultClient):
     """
     Initializes all the API integrations
 
     :param modules: The list of modules to process
     :param api_config: The API configuration dictionary
+    :param vault: The initialized Vault client
     """
-    int_cfg = _get_req_key_values(integrations_required_keys(modules), api_config)
+    int_cfg = _get_req_key_values(integrations_required_keys(modules), api_config, vault)
     for module in modules:
         _init_integration(module, int_cfg)
 
 
-def _get_req_key_values(req_keys:set, api_config:dict) -> dict:
+def _get_req_key_values(req_keys:set, api_config:dict, vault:VaultClient) -> dict:
     """
     Gets the values for required keys
 
     :param req_keys: The set of required keys
     :param api_config: The API configuration dictionary
+    :param vault: The initialized Vault client
 
     :return: Mapping of key/values
     """
@@ -54,6 +57,9 @@ def _get_req_key_values(req_keys:set, api_config:dict) -> dict:
 
     # Wasteful? Yeah, kinda, but most likely as fast as something with continue, and less code
     req_map = {key: obj[key] for key in req_keys for obj in search_objs if key in obj}
+    # Special case for Vault
+    if "VAULT" in req_keys:
+        req_map["VAULT"] = vault
     missing_keys = req_keys.difference(req_map)
     if missing_keys:
         raise IntegrationLoadError(f"Could not load the required keys for API external integrations: {missing_keys}")
