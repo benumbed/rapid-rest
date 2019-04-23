@@ -183,17 +183,20 @@ def start(*_):
     vault_enabled = enable_vault(app) if "VAULT_URL" in os.environ else False
     require_vault = bool(os.environ.get("REQUIRE_VAULT", False))
     if require_vault and vault_enabled:
+        if app.config["vault"] is not None:
+            app.config["vault"].stop_refresh_process()
         app.logger.error("Vault support was required, but enabling Vault failed, exiting")
         exit(1)
 
     app.config["api_config"]["secrets"] = dict()
-    if vault_enabled:
-        app.config["api_config"]["secrets"] = load_secrets_from_vault(app)
-
     try:
+        if vault_enabled:
+            app.config["api_config"]["secrets"] = load_secrets_from_vault(app)
+
         integrations.initialize_api_integrations(integration_modules, app.config["api_config"], app.config["vault"])
     except Exception:
-        del app.config["vault"]
+        if app.config["vault"] is not None:
+            app.config["vault"].stop_refresh_process()
         raise
 
     return app
