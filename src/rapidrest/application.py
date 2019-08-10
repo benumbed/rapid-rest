@@ -16,7 +16,7 @@ def _init_logging(level:str="DEBUG", format:str="%(asctime)s - %(name)s - %(leve
     """
     @brief      Initializes the logging
     """
-    log_level = os.environ.get("LOGLEVEL", level)
+    log_level = os.environ.get("LOGLEVEL", level.upper())
 
     dictConfig({
         'version': 1,
