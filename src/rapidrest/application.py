@@ -180,7 +180,7 @@ def start(*_):
         app.logger.error("Failed to load API: %s", e)
         exit(2)
 
-    vault_enabled = enable_vault(app) if "VAULT_URL" in os.environ else False
+    vault_enabled = enable_vault(app) if "VAULT_URL" in os.environ and os.environ["VAULT_URL"] != "" else False
     require_vault = bool(os.environ.get("REQUIRE_VAULT", False))
     if require_vault and vault_enabled:
         if app.config["vault"] is not None:
