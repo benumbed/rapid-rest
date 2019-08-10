@@ -12,7 +12,7 @@ from logging.config import dictConfig
 
 from rapidrest import utils, routebuilder, errorhandlers, integrations
 
-def _init_logging(level:str="DEBUG", format:str="%(asctime)s - %(name)s - %(levelname)s - %(message)s"):
+def _init_logging(level:str="DEBUG", log_format:str="%(asctime)s - %(name)s - %(levelname)s - %(message)s"):
     """
     @brief      Initializes the logging
     """
@@ -21,7 +21,7 @@ def _init_logging(level:str="DEBUG", format:str="%(asctime)s - %(name)s - %(leve
     dictConfig({
         'version': 1,
         'formatters': {'default': {
-            'format': format,
+            'format': log_format,
         }},
         'handlers': {'wsgi': {
             'class': 'logging.StreamHandler',
@@ -154,7 +154,6 @@ def start(*_):
     
     @return     WSGI application
     """
-    logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
     api_root = os.environ.get("API_ROOT", None)
     if os.environ.get("API_ROOT", None) is None:
         # We set the environment in this case for the tests
