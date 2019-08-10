@@ -154,6 +154,7 @@ def start(*_):
     
     @return     WSGI application
     """
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
     api_root = os.environ.get("API_ROOT", None)
     if os.environ.get("API_ROOT", None) is None:
         # We set the environment in this case for the tests
