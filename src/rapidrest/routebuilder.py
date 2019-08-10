@@ -54,7 +54,7 @@ def _resource_initializer(app, root, module, log):
     res_class_name = module_name.capitalize()
     resource_class = getattr(module, res_class_name, None)
     if resource_class is None:
-        log.warning(f"{module_py_path} does not have the expected class '{res_class_name}', skipping")
+        log.debug(f"{module_py_path} does not have the expected class '{res_class_name}', skipping")
         return
     elif getattr(resource_class, "as_view", None) is None:
         log.warning(f"{module_py_path}.{res_class_name} does not inherit from flask.views.MethodView, skipping")
