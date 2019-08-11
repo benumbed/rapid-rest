@@ -39,7 +39,7 @@ class ApiResource(MethodView):
             abort(403, "Authentication Failed")
 
         self._current_request = ApiRequest(body=request.get_json(), headers=request.headers, flask_request=request)
-        self._vault = current_app.config["vault"] if "vault" in current_app.config else None
+        self._vault = current_app.config["vault_fetcher"]()
         self._api_config = current_app.config["api_config"]
 
         resp = super().dispatch_request(*args, **kwargs)
