@@ -46,7 +46,7 @@ class TestRapidRestAuthentication(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         # If we don't stop the vault client the token refresh process will run indefinitely
-        vault_integration.shutdown_vault()
+        cls.app.config["_vault"].stop_refresh_process()
 
 
     def test_whitelisting(self):

@@ -24,7 +24,7 @@ class TestAPI(unittest.TestCase):
         cls.app = application.start()
         # This test suite does not need to test the auth system, so we disable it
         cls.app.config["api_config"]["security"]["whitelist"] = False
-        cls.app.config["vault"] = cls.fvc
+        cls.app.config["_vault"] = cls.fvc
         cls.srv = webtest.TestApp(cls.app)
 
 

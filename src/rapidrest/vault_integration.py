@@ -9,32 +9,21 @@ import os
 
 from rapidrest import utils
 
-_VAULT_CLIENT = None
 _LOGGER = logging.getLogger("vault_integration")
-
-
-def shutdown_vault():
-    """
-    Shuts down the Vault client cleanly
-    """
-    global _VAULT_CLIENT
-    _VAULT_CLIENT.stop_refresh_process()
-    _VAULT_CLIENT = None
-
 
 def load_vault(app):
     """
 
     :return:
     """
-    if _VAULT_CLIENT is not None:
-        return _VAULT_CLIENT
+    if "_vault" in app.config and app.config["_vault"] is not None:
+        return app.config["_vault"]
 
     if "VAULT_URL" in os.environ and os.environ["VAULT_URL"] != "":
-        enable_vault()
+        app.config["_vault"] = enable_vault()
         app.config["api_config"]["secrets"] = load_secrets_from_vault()
 
-    return _VAULT_CLIENT
+    return app.config["_vault"]
 
 
 def enable_vault():
@@ -45,8 +34,6 @@ def enable_vault():
 
     @return     vaultclient.VaultClient or None on failure
     """
-    global _VAULT_CLIENT
-
     try:
         # We don't (always) use hvac directly, vaultclient abstracts some stuff away and makes Vault a bit easier to use
         vaultclient = importlib.import_module("vaultclient")
@@ -64,17 +51,17 @@ def enable_vault():
     # Login to Vault
     _LOGGER.info("Attempting to log into Vault at %s", os.environ["VAULT_URL"])
     try:
-        _VAULT_CLIENT = vaultclient.VaultClient(
+        vc = vaultclient.VaultClient(
             os.environ["VAULT_URL"],
             os.environ["VAULT_ROLE_ID"],
             os.environ["VAULT_WRAPPED_SECRET"]
         )
-        _VAULT_CLIENT.login()
+        vc.login()
     except Exception as e:
         _LOGGER.error(f"Failed to initialize Vault connection: {e}")
         return None
 
-    if not _VAULT_CLIENT.logged_in:
+    if not vc.logged_in:
         _LOGGER.error("Vault login failed")
         return None
 
@@ -85,7 +72,7 @@ def enable_vault():
              )
 
     _LOGGER.info("Successfully connected to Vault")
-    return _VAULT_CLIENT
+    return vc
 
 
 def load_secrets_from_vault() -> dict:
