@@ -9,7 +9,7 @@ import unittest
 import webtest
 from unittest.mock import patch
 
-from rapidrest import application, utils
+from rapidrest import application, vault_integration
 from vaultutilscommon import vaultinstance
 from rapidrest.security.authentication import create_v1_auth_header
 
@@ -46,7 +46,7 @@ class TestRapidRestAuthentication(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         # If we don't stop the vault client the token refresh process will run indefinitely
-        del cls.app.config["vault"]
+        vault_integration.shutdown_vault()
 
 
     def test_whitelisting(self):

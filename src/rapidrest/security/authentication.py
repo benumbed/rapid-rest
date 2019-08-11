@@ -69,9 +69,9 @@ def _v1_authn_mechanism(app:flask.app, request:flask.Request, auth_dict:dict) ->
 
     @return: True if authenticated, False otherwise
     """
-    if "vault" not in app.config:
+    vault = app.config["vault_fetcher"]()
+    if vault is None:
         flask.abort(500, "Authentication requires Vault, which is not enabled")
-    vault = app.config["vault"]
 
     required_auth_keys = ("Version", "Hash", "Principal", "Signature")
 

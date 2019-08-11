@@ -38,8 +38,13 @@ def initialize_api_integrations(modules:list, api_config:dict, vault:VaultClient
     :param vault: The initialized Vault client
     """
     int_cfg = _get_req_key_values(integrations_required_keys(modules), api_config, vault)
-    for module in modules:
-        _init_integration(module, int_cfg)
+    try:
+        for module in modules:
+            _init_integration(module, int_cfg)
+    except Exception:
+        return False
+
+    return True
 
 
 def _get_req_key_values(req_keys:set, api_config:dict, vault:VaultClient) -> dict:
@@ -85,4 +90,5 @@ def _init_integration(module, cfg:dict):
     try:
         integration_boot(cfg)
     except Exception as e:
+        log.error(f"Failed to run integration bootstrap for {path}: {e}")
         raise IntegrationLoadError(f"Failed to run integration bootstrap for {path}: {e}")

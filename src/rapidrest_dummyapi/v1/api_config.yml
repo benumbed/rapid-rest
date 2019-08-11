@@ -1,7 +1,7 @@
 ---
 api_name: RapidRest Dummy API
 logging:
-  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  log_format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
   level: DEBUG
 
 security:
