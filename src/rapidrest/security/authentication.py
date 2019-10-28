@@ -97,7 +97,7 @@ def authenticate_endpoint(app:flask.app, request:flask.request) -> bool:
     @param request: The current request
     """
     # TODO: Whitelisting being disabled implies blacklisting, which is not currently implemented, instead turning off
-    # whitelisting just turns off auth entirely
+    #   whitelisting just turns off auth entirely
     if not app.config["api_config"]["security"]["whitelist"]:
         return True
 
